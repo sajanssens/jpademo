@@ -23,6 +23,7 @@
     <modules>
         <module>jpawithjse</module>
         <module>jpawithjee</module>
+        <module>jpawithjeedetach</module>
     </modules>
     <dependencies>
         <dependency>

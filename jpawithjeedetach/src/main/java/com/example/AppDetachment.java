@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.detachment.ContactServiceTransactional;
 import com.example.entities.Contact;
+import com.example.entities.ContactServiceTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,11 +31,6 @@ public class AppDetachment implements CommandLineRunner {
         // Contact harry = service.find(1);
         Contact harry = service.update(arie);
         System.out.println(harry);
-
-        // System.out.println("removing...");
-        // service.remove(1);
-        // bram = service.find(1);
-        // System.out.println(bram);
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package com.example.detachment;
+package com.example.entities;
 
 import com.example.entities.Contact;
 import org.springframework.stereotype.Service;
