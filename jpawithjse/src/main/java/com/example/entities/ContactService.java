@@ -45,12 +45,6 @@ public class ContactService {
         return contact;
     }
 
-    public void updateFirstname(Contact c) {
-        em.getTransaction().begin();
-        em.persist(c);
-        em.getTransaction().commit();
-    }
-
     public void remove(long id) {
         Contact contact = find(id);
         if (contact != null) {
