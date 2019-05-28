@@ -32,11 +32,6 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-<!--        <dependency>
-            &lt;!&ndash; provides mysql driver class &ndash;&gt;
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>-->
     </dependencies>
 
 
