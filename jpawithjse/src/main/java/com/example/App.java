@@ -1,8 +1,8 @@
 package com.example;
 
 
-import com.example.entities.Contact;
-import com.example.entities.ContactService;
+import com.example.domain.Contact;
+import com.example.domain.ContactService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;

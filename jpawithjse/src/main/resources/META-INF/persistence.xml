@@ -7,7 +7,7 @@
 
     <persistence-unit name="ContactServiceH2">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.example.entities.Contact</class>
+        <class>com.example.domain.Contact</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test"/>
@@ -21,7 +21,7 @@
 
     <persistence-unit name="ContactServiceMySQL" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>com.example.entities.Contact</class>
+        <class>com.example.domain.Contact</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/test"/>

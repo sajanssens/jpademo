@@ -1,31 +1,32 @@
-package com.example.entities;
+package com.example.domain;
+
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.util.List;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
-public class ContactService {
+@Service
+public class ContactServiceTransactional {
 
+    @PersistenceContext
     private EntityManager em;
 
-    public ContactService(EntityManager em) {
-        this.em = em;
-    }
-
+    @Transactional
     public void save(Contact c) {
         em.persist(c);
     }
 
-    public List<Contact> findAll() {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
-        return query.getResultList();
-
+    @Transactional
+    public Contact update(Contact c) {
+        return em.merge(c);
     }
 
     public Contact find(long id) {
         return em.find(Contact.class, id);
     }
 
+    @Transactional
     public Contact updateFirstname(long id, String fn) {
         Contact contact = find(id);
         if (contact != null) {
@@ -34,6 +35,7 @@ public class ContactService {
         return contact;
     }
 
+    @Transactional
     public void remove(long id) {
         Contact contact = find(id);
         if (contact != null) {

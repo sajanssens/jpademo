@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.entities.Contact;
-import com.example.entities.ContactServiceTransactional;
+import com.example.domain.Contact;
+import com.example.domain.ContactServiceTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Date;
 
-@SpringBootApplication // there can be only one
+@SpringBootApplication
 public class AppDetachment implements CommandLineRunner {
 
     @Autowired

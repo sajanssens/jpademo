@@ -1,4 +1,4 @@
-package com.example.entities;
+package com.example.domain;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

@@ -24,6 +24,7 @@
         <module>jpawithjse</module>
         <module>jpawithjee</module>
         <module>jpawithjeedetach</module>
+        <module>jpawithjeerelational</module>
     </modules>
     <dependencies>
         <dependency>

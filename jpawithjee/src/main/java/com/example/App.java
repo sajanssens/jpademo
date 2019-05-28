@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.entities.Contact;
-import com.example.entities.ContactService;
+import com.example.domain.Contact;
+import com.example.domain.ContactService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
