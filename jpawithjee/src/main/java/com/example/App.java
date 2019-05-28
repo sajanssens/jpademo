@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
-@SpringBootApplication
+// @SpringBootApplication // there can be only one
 public class App implements CommandLineRunner {
 
     @PersistenceContext
@@ -48,10 +48,10 @@ public class App implements CommandLineRunner {
         Contact harry = service.find(1);
         System.out.println(harry);
 
-        System.out.println("removing...");
-        service.remove(1);
-        bram = service.find(1);
-        System.out.println(bram);
+        // System.out.println("removing...");
+        // service.remove(1);
+        // bram = service.find(1);
+        // System.out.println(bram);
     }
 
     public static void main(String[] args) {
