@@ -20,28 +20,22 @@ public class ContactService {
     }
 
     public List<Contact> findAll() {
-        em.getTransaction().begin();
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
-        List<Contact> resultList = query.getResultList();
-        em.getTransaction().commit();
-        return resultList;
+        return query.getResultList();
 
     }
 
     public Contact find(long id) {
-        em.getTransaction().begin();
-        Contact contact = em.find(Contact.class, id);
-        em.getTransaction().commit();
-        return contact;
+        return em.find(Contact.class, id);
     }
 
     public Contact updateFirstname(long id, String fn) {
         Contact contact = find(id);
-        em.getTransaction().begin();
         if (contact != null) {
+            em.getTransaction().begin();
             contact.setFirstname(fn);
+            em.getTransaction().commit();
         }
-        em.getTransaction().commit();
         return contact;
     }
 

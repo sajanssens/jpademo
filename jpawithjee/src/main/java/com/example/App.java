@@ -38,8 +38,7 @@ public class App implements CommandLineRunner {
 
         System.out.println("updating 1...");
         System.out.println(bram);
-        service.updateFirstname(1, "arie");
-        Contact arie = service.find(1);
+        Contact arie = service.updateFirstname(1, "arie");
         System.out.println(arie);
 
         System.out.println("updating 2...");
