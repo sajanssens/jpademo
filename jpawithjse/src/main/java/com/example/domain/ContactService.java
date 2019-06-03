@@ -22,7 +22,6 @@ public class ContactService {
     public List<Contact> findAll() {
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
         return query.getResultList();
-
     }
 
     public Contact find(long id) {
@@ -47,5 +46,6 @@ public class ContactService {
             em.getTransaction().commit();
         }
     }
+
 
 }
