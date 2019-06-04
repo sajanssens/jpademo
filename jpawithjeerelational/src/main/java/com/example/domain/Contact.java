@@ -4,20 +4,17 @@ import com.example.util.BooleanTFConverter;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static javax.persistence.CascadeType.*;
 
+@Entity
 @Table(name = "CONTACTPERSON")
 @Builder
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class Contact {
 
     @Id
@@ -56,7 +53,7 @@ public class Contact {
 
     @ManyToOne(cascade = PERSIST) // UniDi, dept has no reference back to this Contact's departmentBossOf-field
     @JoinColumn(name = "DEPT_BOSS_ID") // this is the owning side by definition (and why do you think?)
-    private Department departmentBossOf;
+    private Department bossOfDepartment;
 
     @ManyToOne(cascade = PERSIST) // BiDi, ParkingSpace has a OneToMany reference back to this Contact
     @JoinColumn // name is optional
@@ -75,13 +72,14 @@ public class Contact {
     private List<Laptop> laptops;
 
     @OneToMany(cascade = {PERSIST, REMOVE}) // UniDi
-    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
+    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to worker
             joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
             inverseJoinColumns = @JoinColumn(name = "phoneId"))
     private Collection<Phone> phoneWork;
 
+    @Singular
     @ManyToMany(cascade = PERSIST) // BiDi, owning side; Department has a ManyToMany reference back to this Contact's departmentWorking-field and has mappedBy
-    private Collection<Department> departmentWorking; // @JoinColumn not possible (since the FK's reside in the generated join table)
+    private Set<Department> worksAtDepartments; // @JoinColumn not possible (since the FK's reside in the generated join table)
 
     // ------------ Methods --------------
 
@@ -95,6 +93,29 @@ public class Contact {
     }
 
     public void clearLeaseCar() { this.leaseCar = null; }
+
+    public void addDepartment(Department d) {
+        getWorksAtDepartments().add(d);
+        d.add(this);
+    }
+
+    // public Contact(long id, String name, Date birthDate, String email, Boolean hasDriversLicence, String resume, byte[] picture, ContactType type, Address addressWork, Set<String> emailAddresses, Department bossOfDepartment, ParkingSpace parkingSpace, Car leaseCar, List<Laptop> laptops, Collection<Phone> phoneWork, Set<Department> worksAtDepartments) {
+    //     this.name = name;
+    //     this.birthDate = birthDate;
+    //     this.email = email;
+    //     this.hasDriversLicence = hasDriversLicence;
+    //     this.resume = resume;
+    //     this.picture = picture;
+    //     this.type = type;
+    //     this.addressWork = addressWork;
+    //     this.emailAddresses = emailAddresses;
+    //     this.bossOfDepartment = bossOfDepartment;
+    //     this.parkingSpace = parkingSpace;
+    //     this.leaseCar = leaseCar;
+    //     this.laptops = laptops;
+    //     this.phoneWork = phoneWork;
+    //     this.worksAtDepartments = new HashSet<>();
+    // }
 }
 
 

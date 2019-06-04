@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.domain.Contact;
 import com.example.domain.Department;
 import com.example.domain.Laptop;
+import com.example.domain.ParkingSpace;
 import com.example.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,22 +45,28 @@ public class ContactService {
         return update(c);
     }
 
+    public void addDepartment(Contact c, Department d) {
+        c.addDepartment(d);
+        update(c);
+    }
+
     // Queries ==========================
 
     // JPQL ---------
 
-    public List<Contact> findByDepartmentBoss(Department d) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.departmentBossOf.id = :id", Contact.class);
-        query.setParameter("id", d.getId());
+    public List<Contact> findByParkingSpace(ParkingSpace ps) {
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.parkingSpace.id = :id", Contact.class);
+        query.setParameter("id", ps.getId());
         return query.getResultList();
     }
 
-    public List<Contact> findByDepartmentBossUsingIN(Department d) {
+    public List<Contact> findByParkingSpaceUsingIN(ParkingSpace ps) {
         TypedQuery<Contact> query = em.createQuery(
-                "SELECT c FROM Department d, " +
-                        "   IN (d.contacts) c " +
-                        "   WHERE d.id = :id", Contact.class);
-        query.setParameter("id", d.getId());
+                "SELECT c FROM ParkingSpace p, " +
+                        "   IN (p.contacts) c " +
+                        // "   Contact c " +
+                        "   WHERE p.id = :id", Contact.class);
+        query.setParameter("id", ps.getId());
         return query.getResultList();
     }
 

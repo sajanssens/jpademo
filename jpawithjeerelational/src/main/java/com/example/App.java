@@ -23,7 +23,10 @@ public class App implements CommandLineRunner {
     @Autowired private DepartmentService departmentService;
 
     private void test() {
-        Department kenniscentrum = Department.builder().name("Kenniscentrum").build();
+        Department kenniscentrum = Department.builder().name("Kenniscentrum").workers(new ArrayList<>()).build();
+        Department finance = Department.builder().name("Finance").build();
+        ParkingSpace parkingSpace = ParkingSpace.builder().number(100).build();
+        Contact piet = Contact.builder().name("Piet").worksAtDepartments(Arrays.asList(kenniscentrum, finance)).birthDate(new Date()).build();
 
         Contact bram = Contact.builder()
                 .name("Bram")
@@ -32,43 +35,48 @@ public class App implements CommandLineRunner {
                 .hasDriversLicence(true)
                 .resume("...very large portion of text....")
                 .type(Normal)
-                .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234AB").build())
+                .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234 AB").build())
                 .emailAddresses(new HashSet<>(Arrays.asList("a@b.com", "b@c.com")))
                 .leaseCar(Car.builder().brand("Opel").build())
-                .departmentBossOf(kenniscentrum)
-                .parkingSpace(ParkingSpace.builder().number(100).build())
+                .bossOfDepartment(kenniscentrum)
+                .worksAtDepartments(Arrays.asList(kenniscentrum, finance))
+                .parkingSpace(parkingSpace)
                 .phoneWork(singletonList(Phone.builder().number("0612345678").build()))
                 .build();
 
+        // Basic CRUD -----------------------------------
+        // create entity
+        contactService.create(bram);
 
-        // Basic -----------------------------------
-        contactService.create(bram); // create new entity
+        // read entity
+        Contact c1 = contactService.find(1);
 
-        Contact contact1 = contactService.find(1);// read entity
-        contact1.setEmail("bram.janssens@infosupport.com");
-        bram = contactService.update(contact1); // update
+        // updates
+        c1.setEmail("bram.janssens@infosupport.com");
+        c1.setBossOfDepartment(finance);
+        c1.setParkingSpace(ParkingSpace.builder().number(99).build());
+        bram = contactService.update(c1);
+
+        // delete
+        // contactService.delete(bram.getId());
 
         // Modify entity's relationships -----------
         contactService.removeLeaseCar(bram); // merge one to one UniDi, remove orphan lease car
         laptopService.addNewLaptopToExistingOwner(bram, "DELL"); // fix Bidi passive side
+        laptopService.changeLaptopOwner(1, piet); // cascade merge on Laptop == update Laptop && insert Contact
 
-        Contact piet = Contact.builder()
-                .name("Piet")
-                .birthDate(new Date())
-                .build();
-        laptopService.changeOwner(1, piet); // cascade merge on Laptop == update Laptop && insert Contact
+        contactService.addDepartment(piet, kenniscentrum);
 
-        // Demonstrate FETCH types:
+        // Demonstrate FETCH types
         Contact contact = contactService.find(1);
         try {
-            Department departmentBossOf = contact.getDepartmentBossOf(); // OK: department is eagerly loaded
-            System.out.println("departmentBossOf loaded");
+            Department departmentBossOf = contact.getBossOfDepartment(); // OK: department is eagerly loaded
+            System.out.println("departmentBossOf loaded: " + departmentBossOf);
         } catch (LazyInitializationException e) {
             System.out.println("LazyInitializationException for departmentBossOf");
         }
 
         laptopService.addNewLaptopToExistingOwner(bram, "SONY");
-
         try {
             List<Laptop> laptops = contact.getLaptops();
             Laptop laptop = laptops.get(0);                 // NOK: laptops lazy and not managed here
@@ -84,15 +92,15 @@ public class App implements CommandLineRunner {
             System.out.println("LazyInitializationException 2 for laptops");
         }
 
-        List<Contact> byDepartmentBoss = contactService.findByDepartmentBoss(kenniscentrum);
-        List<Contact> byDepartmentBossUsingIN = contactService.findByDepartmentBossUsingIN(kenniscentrum);
+        // Queries -------------
+
+        List<Contact> byDepartmentBoss = contactService.findByParkingSpace(parkingSpace);
+        List<Contact> byDepartmentBossUsingIN = contactService.findByParkingSpaceUsingIN(parkingSpace);
         List<Contact> byNameNative = contactService.findByNameNative("br");
         List<Contact> usingCriteriaAPI = contactService.findUsingCriteriaAPI("bram", "s.a.janssens@gmail.com");
         List<Contact> byName = contactService.findByNameWithRepo("br");
         List<Contact> byNameOrEmail = contactService.findByNameOrEmailWithRepo("br", "x@y.com");
         List<Department> departments = departmentService.findDepartmentsByNameWithNamedQuery("Kenniscentrum");
-
-        // contactService.delete(bram.getId()); // delete
     }
 
     public static void main(String[] args) {

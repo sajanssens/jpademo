@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.domain.Contact;
 import com.example.domain.Department;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +22,5 @@ public class DepartmentService {
         query.setParameter("name", name + "%");
         return query.getResultList();
     }
+
 }
