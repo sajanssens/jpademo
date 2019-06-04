@@ -10,10 +10,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static com.example.domain.ContactType.Normal;
 import static java.util.Collections.singletonList;
@@ -95,7 +92,7 @@ public class App implements CommandLineRunner {
         List<Contact> byNameOrEmail = contactService.findByNameOrEmailWithRepo("br", "x@y.com");
         List<Department> departments = departmentService.findDepartmentsByNameWithNamedQuery("Kenniscentrum");
 
-        contactService.delete(bram.getId()); // delete
+        // contactService.delete(bram.getId()); // delete
     }
 
     public static void main(String[] args) {

@@ -67,17 +67,18 @@ public class Contact {
 
     // Collection Valued relationships -------------------
 
-    @OneToMany(cascade = PERSIST) // UniDi
-    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
-            joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it
-            inverseJoinColumns = @JoinColumn(name = "phoneId"))
-    private Collection<Phone> phoneWork;
-
-    @Singular // let lombok initialize with empty collectoin
+    @Singular // let lombok initialize this with an empty collection
     @OneToMany(cascade = {PERSIST, MERGE, REMOVE},// BiDi, passive side
             mappedBy = "owner"/*,
             fetch = FetchType.EAGER*/) // override the default
+    @OrderBy("name ASC")
     private List<Laptop> laptops;
+
+    @OneToMany(cascade = {PERSIST, REMOVE}) // UniDi
+    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
+            joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
+            inverseJoinColumns = @JoinColumn(name = "phoneId"))
+    private Collection<Phone> phoneWork;
 
     @ManyToMany(cascade = PERSIST) // BiDi, owning side; Department has a ManyToMany reference back to this Contact's departmentWorking-field and has mappedBy
     private Collection<Department> departmentWorking; // @JoinColumn not possible (since the FK's reside in the generated join table)
