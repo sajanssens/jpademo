@@ -63,8 +63,8 @@ public class App implements CommandLineRunner {
 
         // Modify entity's relationships -----------
         contactService.removeLeaseCar(bram); // merge one to one UniDi, remove orphan lease car
-        laptopService.addNewLaptopToExistingOwner(bram, "DELL"); // fix Bidi passive side
-        piet = laptopService.changeLaptopOwner(1, piet);// cascade merge on Laptop == update Laptop && insert Contact piet; piet is returned, so we can get its id
+        Laptop dell = laptopService.addNewLaptopToExistingOwner(bram, "DELL");// fix Bidi passive side
+        piet = laptopService.changeLaptopOwner(dell, piet);// cascade merge on Laptop == update Laptop && insert Contact piet; piet is returned, so we can get its id
         contactService.addDepartment(piet, kenniscentrum); // update manytomany
 
         // Demonstrate FETCH types
