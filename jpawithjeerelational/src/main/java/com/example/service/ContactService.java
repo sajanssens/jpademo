@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.domain.Contact;
 import com.example.domain.Department;
+import com.example.domain.Laptop;
 import com.example.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,80 +24,83 @@ public class ContactService {
     @PersistenceContext
     private EntityManager em;
 
-    public void create(Contact c) {
-        em.persist(c);
-    }
+    // Basic CRUD -----------
 
-    public Contact update(Contact c) {
-        return em.merge(c);
-    }
+    public void create(Contact c) { em.persist(c); }
 
-    public Contact find(long id) {
-        return em.find(Contact.class, id);
-    }
+    public Contact find(long id) { return em.find(Contact.class, id); }
 
-    public Contact removeLeaseCar(Contact c) {
-        c.setLeaseCar(null);
-        return em.merge(c);
-    }
+    public Contact update(Contact c) { return em.merge(c); }
 
     public void delete(long id) {
         Contact contact = find(id);
-        if (contact != null) {
-            em.remove(contact);
-        }
+        if (contact != null) { em.remove(contact); }
     }
 
-    public List<Contact> findByDepartment(Department d) {
+    // Managing relationships
+
+    public Contact removeLeaseCar(Contact c) {
+        c.clearLeaseCar();
+        return update(c);
+    }
+
+    // Queries ==========================
+
+    // JPQL ---------
+
+    public List<Contact> findByDepartmentBoss(Department d) {
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.departmentBossOf.id = :id", Contact.class);
         query.setParameter("id", d.getId());
         return query.getResultList();
     }
 
-    public List<Contact> findByDepartmentUsingIN(Department d) {
+    public List<Contact> findByDepartmentBossUsingIN(Department d) {
         TypedQuery<Contact> query = em.createQuery(
-                "SELECT c " +
-                        "FROM Department d, " +
+                "SELECT c FROM Department d, " +
                         "   IN (d.contacts) c " +
                         "   WHERE d.id = :id", Contact.class);
         query.setParameter("id", d.getId());
         return query.getResultList();
     }
 
-    public List<Department> findDepartmentByName(String name) {
-        TypedQuery<Department> query = em.createNamedQuery("findByName", Department.class);
-        query.setParameter("name", name + "%");
-        return query.getResultList();
-    }
+    // Native query ---------
 
-    public List<Contact> findByNameNative(String name) {
-        Query query = em.createNativeQuery("SELECT * FROM Contact WHERE name like ?", Contact.class);
+   public List<Contact> findByNameNative(String name) {
+        Query query = em.createNativeQuery("SELECT * FROM contactperson WHERE C_NAME LIKE ?", Contact.class);
         query.setParameter(1, name + "%");
         return query.getResultList();
     }
 
-    public List<Contact> findUsingCriteriaAPI() {
+    // Criteria API ---------
+
+    public List<Contact> findUsingCriteriaAPI(String name, String email) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Contact> q = cb.createQuery(Contact.class);
 
         Root<Contact> c = q.from(Contact.class);
         q.select(c)
-                .where(
-                        cb.and(
-                                cb.equal(c.get("name"), "bram"),
-                                cb.equal(c.get("email"), "s.a.janssens@gmail.com")));
+                .distinct(true)
+                .where(cb.and(
+                        cb.equal(c.get("name"), name),
+                        cb.equal(c.get("email"), email)));
         return em.createQuery(q).getResultList();
     }
 
+    // Using repository --------
+
     @Autowired
-    private ContactRepository repo;
+    private ContactRepository repository;
 
-    public List<Contact> findByName(String n){
-        return repo.findByName(n);
+    public List<Contact> findByNameWithRepo(String n) {
+        return repository.findByName(n);
     }
 
-    public List<Contact> findByNameOrEmail(String n, String e){
-        return repo.findByNameOrEmail(n, e);
+    public List<Contact> findByNameOrEmailWithRepo(String n, String e) {
+        return repository.findByNameOrEmail(n, e);
     }
 
+    public Laptop getLaptop(Contact contact, int index) {
+        Contact merge = em.merge(contact);
+        return merge.getLaptops().get(index);
+    }
 }

@@ -1,22 +1,22 @@
 package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-import static javax.persistence.CascadeType.MERGE;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Table(name = "CONTACTPERSON")
 @Builder
-// @Setter
 @Getter
+@Setter
 @NoArgsConstructor
-// @AllArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Contact {
 
@@ -40,7 +40,7 @@ public class Contact {
     private String resume;
 
     @Lob // to instruct jdbc to treat this field specifically
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.LAZY) // lazy loading on basic field mapping
     private byte[] picture;
 
     @Enumerated(EnumType.STRING)
@@ -54,9 +54,6 @@ public class Contact {
 
     // Single Valued relationships -------------------
 
-    @OneToOne(cascade = PERSIST, orphanRemoval = true) // UniDi, TransientPropertyValueException when not cascading
-    private Car leaseCar; // with UniDi, this is the owning side by definition
-
     @ManyToOne(cascade = PERSIST) // UniDi, dept has no reference back to this Contact's departmentBossOf-field
     @JoinColumn(name = "DEPT_BOSS_ID") // this is the owning side by definition (and why do you think?)
     private Department departmentBossOf;
@@ -65,15 +62,19 @@ public class Contact {
     @JoinColumn // name is optional
     private ParkingSpace parkingSpace;
 
+    @OneToOne(cascade = PERSIST, orphanRemoval = true) // UniDi, TransientPropertyValueException when not cascading
+    private Car leaseCar; // with UniDi, this is the owning side by definition
+
     // Collection Valued relationships -------------------
 
     @OneToMany(cascade = PERSIST) // UniDi
     @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
-            joinColumns = @JoinColumn(name = "contactId"),
+            joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it
             inverseJoinColumns = @JoinColumn(name = "phoneId"))
     private Collection<Phone> phoneWork;
 
-    @OneToMany(cascade = {PERSIST, MERGE},// BiDi, passive side
+    @Singular // let lombok initialize with empty collectoin
+    @OneToMany(cascade = {PERSIST, MERGE, REMOVE},// BiDi, passive side
             mappedBy = "owner"/*,
             fetch = FetchType.EAGER*/) // override the default
     private List<Laptop> laptops;
@@ -83,36 +84,16 @@ public class Contact {
 
     // ------------ Methods --------------
 
-    public Contact(long id, String name, Date birthDate, String email, Boolean hasDriversLicence, String resume, byte[] picture, ContactType type, Address addressWork, Set<String> emailAddresses, Car leaseCar, Department departmentBossOf, ParkingSpace parkingSpace, Collection<Phone> phoneWork, List<Laptop> laptops, Collection<Department> departmentWorking) {
-        this.name = name;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.hasDriversLicence = hasDriversLicence;
-        this.resume = resume;
-        this.picture = picture;
-        this.type = type;
-        this.addressWork = addressWork;
-        this.emailAddresses = emailAddresses;
-        this.leaseCar = leaseCar;
-        this.departmentBossOf = departmentBossOf;
-        this.parkingSpace = parkingSpace;
-        this.phoneWork = phoneWork;
-        this.laptops = new ArrayList<>();
-        this.departmentWorking = departmentWorking;
-    }
-
     public void addLaptop(Laptop lap) {
         this.laptops.add(lap);
-        lap.setOwner(this); //to fix the BiDi relationship
+        lap.setOwner(this); // to fix the passive side of the BiDi relationship
     }
 
     public void removeLaptop(Laptop lap) {
         this.laptops.remove(lap);
     }
 
-    public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
-
-    public void setName(String name) { this.name = name; }
+    public void clearLeaseCar() { this.leaseCar = null; }
 }
 
 
