@@ -17,6 +17,10 @@ public class DepartmentService {
     @PersistenceContext
     private EntityManager em;
 
+    public void create(Department d) { em.persist(d); }
+
+    public Department find(long id) { return em.find(Department.class, id); }
+
     public List<Department> findDepartmentsByNameWithNamedQuery(String name) {
         TypedQuery<Department> query = em.createNamedQuery("findByName", Department.class);
         query.setParameter("name", name + "%");

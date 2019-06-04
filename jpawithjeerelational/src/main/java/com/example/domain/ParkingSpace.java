@@ -15,6 +15,6 @@ import java.util.Collection;
 public class ParkingSpace extends AbstractEntity {
     private int number;
 
-    @OneToMany(mappedBy = "parkingSpace")
+    @OneToMany(mappedBy = "parkingSpace") // Bidi, passive side
     private Collection<Contact> contacts;
 }

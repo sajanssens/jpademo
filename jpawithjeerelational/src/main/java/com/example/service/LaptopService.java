@@ -19,10 +19,10 @@ public class LaptopService {
         return em.find(Laptop.class, id);
     }
 
-    public void changeLaptopOwner(long laptopId, Contact newOwner) {
+    public Contact changeLaptopOwner(long laptopId, Contact newOwner) {
         Laptop laptop = find(laptopId);
         laptop.setOwner(newOwner);
-        em.merge(laptop); // since laptop.owner has cascade on merge, also new contactsWorking will be inserted
+        return em.merge(laptop).getOwner(); // since laptop.owner has cascade on merge, also new contacts will be inserted and returned here
     }
 
     public void addNewLaptopToExistingOwner(Contact c, String laptopName) {

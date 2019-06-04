@@ -23,10 +23,10 @@ public class App implements CommandLineRunner {
     @Autowired private DepartmentService departmentService;
 
     private void test() {
-        Department kenniscentrum = Department.builder().name("Kenniscentrum").workers(new ArrayList<>()).build();
+        Department kenniscentrum = Department.builder().name("Kenniscentrum").build();
         Department finance = Department.builder().name("Finance").build();
         ParkingSpace parkingSpace = ParkingSpace.builder().number(100).build();
-        Contact piet = Contact.builder().name("Piet").worksAtDepartments(Arrays.asList(kenniscentrum, finance)).birthDate(new Date()).build();
+        Contact piet = Contact.builder().name("Piet").birthDate(new Date()).build();
 
         Contact bram = Contact.builder()
                 .name("Bram")
@@ -39,7 +39,8 @@ public class App implements CommandLineRunner {
                 .emailAddresses(new HashSet<>(Arrays.asList("a@b.com", "b@c.com")))
                 .leaseCar(Car.builder().brand("Opel").build())
                 .bossOfDepartment(kenniscentrum)
-                .worksAtDepartments(Arrays.asList(kenniscentrum, finance))
+                .worksAtDepartment(kenniscentrum)
+                .worksAtDepartment(finance)
                 .parkingSpace(parkingSpace)
                 .phoneWork(singletonList(Phone.builder().number("0612345678").build()))
                 .build();
@@ -49,7 +50,7 @@ public class App implements CommandLineRunner {
         contactService.create(bram);
 
         // read entity
-        Contact c1 = contactService.find(1);
+        Contact c1 = contactService.find(bram.getId());
 
         // updates
         c1.setEmail("bram.janssens@infosupport.com");
@@ -63,9 +64,8 @@ public class App implements CommandLineRunner {
         // Modify entity's relationships -----------
         contactService.removeLeaseCar(bram); // merge one to one UniDi, remove orphan lease car
         laptopService.addNewLaptopToExistingOwner(bram, "DELL"); // fix Bidi passive side
-        laptopService.changeLaptopOwner(1, piet); // cascade merge on Laptop == update Laptop && insert Contact
-
-        contactService.addDepartment(piet, kenniscentrum);
+        piet = laptopService.changeLaptopOwner(1, piet);// cascade merge on Laptop == update Laptop && insert Contact piet; piet is returned, so we can get its id
+        contactService.addDepartment(piet, kenniscentrum); // update manytomany
 
         // Demonstrate FETCH types
         Contact contact = contactService.find(1);

@@ -25,6 +25,8 @@ public class ContactService {
     @PersistenceContext
     private EntityManager em;
 
+    @Autowired private DepartmentService departmentService;
+
     // Basic CRUD -----------
 
     public void create(Contact c) { em.persist(c); }
@@ -41,13 +43,16 @@ public class ContactService {
     // Managing relationships
 
     public Contact removeLeaseCar(Contact c) {
-        c.clearLeaseCar();
-        return update(c);
+        Contact contact = find(c.getId());
+        contact.clearLeaseCar();
+        return update(contact);
     }
 
-    public void addDepartment(Contact c, Department d) {
-        c.addDepartment(d);
-        update(c);
+    public Contact addDepartment(Contact c, Department d) {
+        Contact contact = find(c.getId());
+        Department department = departmentService.find(d.getId());
+        contact.addDepartment(department);
+        return update(contact);
     }
 
     // Queries ==========================

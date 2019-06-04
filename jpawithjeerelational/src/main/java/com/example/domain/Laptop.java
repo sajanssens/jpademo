@@ -1,9 +1,6 @@
 package com.example.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +14,7 @@ import javax.persistence.ManyToOne;
 public class Laptop extends AbstractEntity {
     private String name;
 
+    @Getter
     @ManyToOne(cascade = CascadeType.MERGE) // BiDi, owning side
     private Contact owner;
 
