@@ -4,7 +4,11 @@ import com.example.util.BooleanTFConverter;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.*;
+import javax.validation.constraints.Size;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 
@@ -21,6 +25,7 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.TABLE) // note
     private long id;
 
+    @Size(min = 2, max = 4) // bean validation
     @Column(name = "C_NAME", length = 50, nullable = false)
     private String name;
 
