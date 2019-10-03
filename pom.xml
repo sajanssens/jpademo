@@ -8,30 +8,26 @@
     <artifactId>jpademo</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <modules>
-        <module>jpawithjse</module>
-        <module>jpawithjee</module>
-        <module>jpawithjeedetach</module>
-        <module>jpawithjeerelational</module>
-    </modules>
-    <dependencies>
+	
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+	
+	<modules>
+		<module>jpa-with-jse</module>
+        <module>jpa-container-managed</module>
+        <module>jpa-container-managed-detach-demo</module>
+        <module>jpa-container-managed-relational</module>
+	</modules>
+	
+	<dependencies>
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
             <version>2.2</version>
         </dependency>
     </dependencies>
-
+	
 </project>
