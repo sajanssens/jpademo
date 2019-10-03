@@ -10,10 +10,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.domain.ContactType.Normal;
 import static java.util.Collections.singletonList;
@@ -39,7 +38,7 @@ public class App implements CommandLineRunner {
                 .resume("...very large portion of text....")
                 .type(Normal)
                 .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234 AB").build())
-                .emailAddresses(new HashSet<>(Arrays.asList("a@b.com", "b@c.com")))
+                .emailAddresses(Set.of("a@b.com", "b@c.com"))
                 .leaseCar(Car.builder().brand("Opel").build())
                 .bossOfDepartment(kenniscentrum)
                 .worksAtDepartment(kenniscentrum)
@@ -94,6 +93,24 @@ public class App implements CommandLineRunner {
         } catch (LazyInitializationException e) {
             System.out.println("LazyInitializationException 2 for laptops");
         }
+
+        Contact bram2 = Contact.builder()
+                .name("Gijs")
+                .birthDate(new Date())
+                .email("s.a.janssens2@gmail.com")
+                .hasDriversLicence(true)
+                .resume("...very large portion of text....")
+                .type(Normal)
+                .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234 AB").build())
+                .emailAddresses(Set.of("a@b.com", "b@c.com"))
+                .leaseCar(Car.builder().brand("Opel").build())
+                // .bossOfDepartment(kenniscentrum)
+                // .worksAtDepartment(kenniscentrum)
+                // .worksAtDepartment(finance)
+                // .parkingSpace(parkingSpace)
+                .phoneWork(singletonList(Phone.builder().number("0612345678").build()))
+                .build();
+        // contactService.create(bram2);
 
         // Queries -------------
 

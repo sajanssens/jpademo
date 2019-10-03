@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
-import static javax.persistence.GenerationType.TABLE;
+import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.TemporalType.DATE;
 
 @Entity
@@ -21,16 +21,18 @@ import static javax.persistence.TemporalType.DATE;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Contact { // doesn't extend abstractentity because we want a different id generation strategy here (as an example)
+public class Contact { // doesn't extend abstractentity so we can choose a different id generation strategy here (as an example)
 
-    @Id @GeneratedValue(strategy = TABLE) // note
+    @Id @GeneratedValue(strategy = IDENTITY) // note
     private long id;
+
+    // Fields: --------------
 
     @Size(min = 2, max = 4) // bean validation
     @Column(name = "C_NAME", length = 50, nullable = false)
     private String name;
 
-    @Temporal(value = DATE)
+    @Temporal(value = DATE) // choose which part we want: date, time, or datetime (=default)
     private Date birthDate;
 
     @Column(unique = true)
@@ -52,17 +54,22 @@ public class Contact { // doesn't extend abstractentity because we want a differ
     @Embedded
     private Address addressWork;
 
-    @ElementCollection
+    // Relationships: ---------------------------------------------
+
+    // Value collection ----------
+
+    @ElementCollection // automatically becomes separate table
     private Set<String> emailAddresses;
 
-    // Single Valued relationships -------------------
+    // Single Valued relationships ------------
 
+    // this is the owning side by definition (and why do you think?)
     @ManyToOne(cascade = PERSIST) // UniDi, dept has no reference back to this Contact's departmentBossOf-field
-    @JoinColumn(name = "DEPT_BOSS_ID") // this is the owning side by definition (and why do you think?)
+    @JoinColumn(name = "DEPT_BOSS_ID") // optionally specify FK name
     private Department bossOfDepartment;
 
     @ManyToOne(cascade = ALL) // BiDi, owning side; ParkingSpace has a OneToMany reference back to this Contact
-    @JoinColumn // name is optional
+    // @JoinColumn // optional
     private ParkingSpace parkingSpace;
 
     @OneToOne(cascade = PERSIST, orphanRemoval = true) // UniDi, TransientPropertyValueException when not cascading
