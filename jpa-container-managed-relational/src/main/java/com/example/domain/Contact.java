@@ -23,7 +23,7 @@ import static javax.persistence.TemporalType.DATE;
 @AllArgsConstructor
 public class Contact { // doesn't extend abstractentity so we can choose a different id generation strategy here (as an example)
 
-    @Id @GeneratedValue(strategy = IDENTITY) // note
+    @Id @GeneratedValue(strategy = IDENTITY)
     private long id;
 
     // Fields: --------------
@@ -56,12 +56,12 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
 
     // Relationships: ---------------------------------------------
 
-    // Value collection ----------
+    // --- Value collection ----------
 
     @ElementCollection // automatically becomes separate table
     private Set<String> emailAddresses;
 
-    // Single Valued relationships ------------
+    // --- Single Valued relationships  (@...ToOne) ------------
 
     // this is the owning side by definition (and why do you think?)
     @ManyToOne(cascade = PERSIST) // UniDi, dept has no reference back to this Contact's departmentBossOf-field
@@ -73,26 +73,29 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
     private ParkingSpace parkingSpace;
 
     @OneToOne(cascade = PERSIST, orphanRemoval = true) // UniDi, TransientPropertyValueException when not cascading
-    private Car leaseCar; // with UniDi, this is the owning side by definition
+    private Car leaseCar; // with UniDi, this is the owning side by definition; Contact just has the Car
 
-    // Collection Valued relationships -------------------
+    // --- Collection Valued relationships (@...ToMany) -------------------
 
     @Singular // lombok: makes this plural field available in singular form to the builder
     @OneToMany(cascade = {PERSIST, MERGE, REMOVE},// BiDi, passive side
             mappedBy = "owner"/*,
-            fetch = FetchType.EAGER*/) // override the default
+            fetch = FetchType.EAGER*/) // optionally override the default
     @OrderBy("name ASC")
     private List<Laptop> laptops;
 
     @OneToMany(cascade = {PERSIST, REMOVE}) // UniDi
-    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since immutable Phone, the many side, doesn't have a reference to this Contact and therefore no FK to worker
+    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
             joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
             inverseJoinColumns = @JoinColumn(name = "phoneId"))
     private Collection<Phone> phoneWork;
 
     @Singular // lombok: makes this plural field available in singular form to the builder
     @ManyToMany(cascade = PERSIST) // BiDi, owning side; Department has a ManyToMany reference back to this Contact's departmentWorking-field and has mappedBy
-    private Set<Department> worksAtDepartments; // @JoinColumn not possible (since the FK's reside in the generated join table)
+    // @JoinTable(name = "contactdepartment", // optional, to specify the names
+    //         joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
+    //         inverseJoinColumns = @JoinColumn(name = "departmentId"))
+    private Set<Department> worksAtDepartments; // single @JoinColumn not possible (since the FK's reside in the generated join table)
 
     // ------------ Methods --------------
 

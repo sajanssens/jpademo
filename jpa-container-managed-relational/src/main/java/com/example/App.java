@@ -39,12 +39,12 @@ public class App implements CommandLineRunner {
                 .type(Normal)
                 .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234 AB").build())
                 .emailAddresses(Set.of("a@b.com", "b@c.com"))
-                .leaseCar(Car.builder().brand("Opel").build())
                 .bossOfDepartment(kenniscentrum)
+                .parkingSpace(parkingSpace)
+                .leaseCar(Car.builder().brand("Opel").build())
+                .phoneWork(singletonList(Phone.builder().number("0612345678").build()))
                 .worksAtDepartment(kenniscentrum)
                 .worksAtDepartment(finance)
-                .parkingSpace(parkingSpace)
-                .phoneWork(singletonList(Phone.builder().number("0612345678").build()))
                 .build();
 
         // Basic CRUD -----------------------------------
