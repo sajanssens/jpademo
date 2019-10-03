@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ContactRepository extends CrudRepository<Contact, Long> {
+public interface ContactRepositoryCRUD extends CrudRepository<Contact, Long> {
     List<Contact> findByName(String name);
 
     @Query("SELECT c FROM Contact c WHERE c.name=:name OR c.email=:email")

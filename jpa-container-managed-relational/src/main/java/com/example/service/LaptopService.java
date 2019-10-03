@@ -22,7 +22,7 @@ public class LaptopService {
     public Contact changeLaptopOwner(Laptop lap, Contact newOwner) {
         Laptop laptop = find(lap.getId());
         laptop.setOwner(newOwner);
-        return em.merge(laptop).getOwner(); // since laptop.owner has cascade on merge, also new contacts will be inserted and returned here
+        return em.merge(laptop).getOwner(); // update laptop, and since laptop.owner has cascade on merge, new contact will be inserted and returned here too
     }
 
     public Laptop addNewLaptopToExistingOwner(Contact c, String laptopName) {

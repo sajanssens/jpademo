@@ -10,7 +10,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 import static com.example.domain.ContactType.Normal;
 import static java.util.Collections.singletonList;
@@ -86,7 +89,7 @@ public class App implements CommandLineRunner {
         }
 
         try {
-            Laptop laptop = contactService.getLaptop(contact, 0); // OK: laptops are lazy, but were managed and accessed in transactional service, and therefore loaded just in time
+            Laptop laptop = contactService.getLazyLaptop(contact, 0); // OK: laptops are lazy, but were managed and accessed in transactional service, and therefore loaded just in time
             System.out.println("laptop(0) loaded: " + laptop);
         } catch (LazyInitializationException e) {
             System.out.println("LazyInitializationException 2 for laptops");
@@ -94,11 +97,12 @@ public class App implements CommandLineRunner {
 
         // Queries -------------
 
-        List<Contact> byDepartmentBoss = contactService.findByParkingSpace(parkingSpace);
-        List<Contact> byDepartmentBossUsingIN = contactService.findByParkingSpaceUsingIN(parkingSpace);
+        List<Contact> byParkingSpace = contactService.findByParkingSpace(parkingSpace);
+        List<Contact> byParkingSpaceUsingIN = contactService.findByParkingSpaceUsingIN(parkingSpace);
         List<Contact> byNameNative = contactService.findByNameNative("br");
         List<Contact> usingCriteriaAPI = contactService.findUsingCriteriaAPI("bram", "s.a.janssens@gmail.com");
-        List<Contact> byName = contactService.findByNameWithRepo("br");
+        List<Contact> byNameWithRepo = contactService.findByNameWithRepo("br");
+        List<Contact> byNameWithJpaRepo = contactService.findByEmailWithJPARepo("gmail");
         List<Contact> byNameOrEmail = contactService.findByNameOrEmailWithRepo("br", "x@y.com");
         List<Department> departments = departmentService.findDepartmentsByNameWithNamedQuery("Kenniscentrum");
     }

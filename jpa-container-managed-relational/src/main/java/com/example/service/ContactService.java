@@ -4,7 +4,8 @@ import com.example.domain.Contact;
 import com.example.domain.Department;
 import com.example.domain.Laptop;
 import com.example.domain.ParkingSpace;
-import com.example.repository.ContactRepository;
+import com.example.repository.ContactRepositoryCRUD;
+import com.example.repository.ContactRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,16 @@ public class ContactService {
         return update(contact);
     }
 
+    public Laptop getLazyLaptop(Contact contact, int index) {
+        // transaction starts
+        Contact mergedAndManagedContact = em.merge(contact);
+
+        // transaction still runs: lazy laptops can and will be fetched if requested
+        List<Laptop> laptops = mergedAndManagedContact.getLaptops();
+
+        return laptops.get(index); // works since laptops were fetched
+    }
+
     // Queries ==========================
 
     // JPQL ---------
@@ -77,7 +88,7 @@ public class ContactService {
 
     // Native query ---------
 
-   public List<Contact> findByNameNative(String name) {
+    public List<Contact> findByNameNative(String name) {
         Query query = em.createNativeQuery("SELECT * FROM contactperson WHERE C_NAME LIKE ?", Contact.class);
         query.setParameter(1, name + "%");
         return query.getResultList();
@@ -98,21 +109,20 @@ public class ContactService {
         return em.createQuery(q).getResultList();
     }
 
-    // Using repository --------
+    // Using repositories --------
 
-    @Autowired
-    private ContactRepository repository;
+    @Autowired private ContactRepositoryCRUD repositoryCRUD;
 
     public List<Contact> findByNameWithRepo(String n) {
-        return repository.findByName(n);
+        return repositoryCRUD.findByName(n);
     }
 
-    public List<Contact> findByNameOrEmailWithRepo(String n, String e) {
-        return repository.findByNameOrEmail(n, e);
+    public List<Contact> findByNameOrEmailWithRepo(String n, String e) { return repositoryCRUD.findByNameOrEmail(n, e); }
+
+    @Autowired private ContactRepositoryJPA repositoryJPA;
+
+    public List<Contact> findByEmailWithJPARepo(String e) {
+        return repositoryJPA.findByEmail(e);
     }
 
-    public Laptop getLaptop(Contact contact, int index) {
-        Contact merge = em.merge(contact);
-        return merge.getLaptops().get(index);
-    }
 }
