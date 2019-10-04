@@ -28,7 +28,7 @@ public class LaptopService {
     public Laptop addNewLaptopToExistingOwner(Contact c, String laptopName) {
         Laptop laptop = Laptop.builder().name(laptopName).build();
         c.addLaptop(laptop);
-        em.persist(laptop);
+        em.persist(laptop); // create laptop, and since contact.laptops has cascade on persist, new laptop will be inserted and returned here too
         return laptop;
     }
 

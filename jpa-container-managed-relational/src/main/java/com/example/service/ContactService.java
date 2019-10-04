@@ -19,6 +19,8 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @Transactional
 public class ContactService {
@@ -78,11 +80,12 @@ public class ContactService {
 
     public List<Contact> findByParkingSpaceUsingIN(ParkingSpace ps) {
         TypedQuery<Contact> query = em.createQuery(
-                "SELECT c FROM ParkingSpace p, " +
+                "SELECT c " +
+                        "FROM ParkingSpace p, " +
                         "   IN (p.contacts) c " +
-                        // "   Contact c " +
-                        "   WHERE p.id = :id", Contact.class);
-        query.setParameter("id", ps.getId());
+                        "WHERE p.id = :id", Contact.class)
+                .setParameter("id", ps.getId());
+
         return query.getResultList();
     }
 
@@ -118,6 +121,12 @@ public class ContactService {
     }
 
     public List<Contact> findByNameOrEmailWithRepo(String n, String e) { return repositoryCRUD.findByNameOrEmail(n, e); }
+
+    public List<Contact> findDrivers() {
+        return repositoryCRUD.findContacts() // stream
+                .filter(Contact::getHasDriversLicence)
+                .collect(toList());
+    }
 
     @Autowired private ContactRepositoryJPA repositoryJPA;
 

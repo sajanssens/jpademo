@@ -101,7 +101,7 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
 
     public void addLaptop(Laptop lap) {
         this.laptops.add(lap);
-        lap.setOwner(this); // to fix the passive side of the BiDi relationship
+        lap.setOwner(this); // to fix the passive side (this) of the BiDi relationship
     }
 
     public void removeLaptop(Laptop lap) {
