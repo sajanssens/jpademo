@@ -102,7 +102,7 @@ public class AppTest {
         // Inheritance
 
         VipContact vipContact = new VipContact(50);
-        vipContact.setName("Vipje");
+        vipContact.setName("Vlip");
         contactService.create(vipContact);
 
         // Queries -------------
