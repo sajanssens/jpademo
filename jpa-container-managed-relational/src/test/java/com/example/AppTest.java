@@ -40,6 +40,7 @@ public class AppTest {
                 .hasDriversLicence(true)
                 .resume("...very large portion of text....")
                 .type(Normal)
+                .resume("jkd fhskdj fhsdkjh fsdjkfh sdkjhf sdkjfh kjsd fj")
                 .addressWork(Address.builder().street("Dorpsstraat 1").zip("1234 AB").build())
                 .emailAddresses(Set.of("a@b.com", "b@c.com"))
                 .bossOfDepartment(kenniscentrum)
@@ -56,6 +57,8 @@ public class AppTest {
 
         // read entity
         Contact c1 = contactService.find(bram.getId());
+        System.out.println("================================");
+        System.out.println(c1);
 
         // updates
         c1.setEmail("bram.janssens@infosupport.com");
@@ -81,7 +84,7 @@ public class AppTest {
             System.out.println("LazyInitializationException for departmentBossOf");
         }
 
-        laptopService.addNewLaptopToExistingOwner(bram, "SONY");
+        laptopService.addNewLaptopToExistingOwner(contact, "SONY");
         try {
             List<Laptop> laptops = contact.getLaptops();
             Laptop laptop = laptops.get(0);                 // NOK: laptops lazy and not managed here
@@ -96,6 +99,11 @@ public class AppTest {
         } catch (LazyInitializationException e) {
             System.out.println("LazyInitializationException 2 for laptops");
         }
+        // Inheritance
+
+        VipContact vipContact = new VipContact(50);
+        vipContact.setName("Vipje");
+        contactService.create(vipContact);
 
         // Queries -------------
 

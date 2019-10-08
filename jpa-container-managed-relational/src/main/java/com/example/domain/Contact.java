@@ -5,10 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -21,6 +18,7 @@ import static javax.persistence.TemporalType.DATE;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Contact { // doesn't extend abstractentity so we can choose a different id generation strategy here (as an example)
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -100,6 +98,7 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
     // ------------ Methods --------------
 
     public void addLaptop(Laptop lap) {
+        if (this.laptops == null) laptops = new ArrayList<>();
         this.laptops.add(lap);
         lap.setOwner(this); // to fix the passive side (this) of the BiDi relationship
     }

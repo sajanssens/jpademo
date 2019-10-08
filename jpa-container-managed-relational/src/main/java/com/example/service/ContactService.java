@@ -73,8 +73,8 @@ public class ContactService {
     // JPQL ---------
 
     public List<Contact> findByParkingSpace(ParkingSpace ps) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.parkingSpace.id = :id", Contact.class);
-        query.setParameter("id", ps.getId());
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.parkingSpace.id = :doemaarwat", Contact.class);
+        query.setParameter("doemaarwat", ps.getId());
         return query.getResultList();
     }
 
