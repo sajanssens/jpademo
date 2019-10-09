@@ -26,9 +26,11 @@ public class LaptopService {
     }
 
     public Laptop addNewLaptopToExistingOwner(Contact c, String laptopName) {
+        Contact merge = em.merge(c);
         Laptop laptop = Laptop.builder().name(laptopName).build();
-        c.addLaptop(laptop);
-        em.persist(laptop); // create laptop, and since contact.laptops has cascade on persist, new laptop will be inserted and returned here too
+        merge.addLaptop(laptop);
+        em.merge(merge);
+        em.persist(laptop); // create laptop, and since laptop has cascade, new laptop will be inserted and returned here too
         return laptop;
     }
 
