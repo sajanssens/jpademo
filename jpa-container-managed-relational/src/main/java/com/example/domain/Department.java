@@ -20,7 +20,7 @@ public class Department extends AbstractEntity {
 
     private String name;
 
-    @ManyToMany(mappedBy = "worksAtDepartments") // BiDi, passive side
+    @ManyToMany/*(mappedBy = "worksAtDepartments")*/ // BiDi, passive side
     private List<Contact> workers;
 
     public Department add(Contact contact) {

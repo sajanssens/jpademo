@@ -1,9 +1,6 @@
 package com.example.service;
 
-import com.example.domain.Contact;
-import com.example.domain.Department;
-import com.example.domain.Laptop;
-import com.example.domain.ParkingSpace;
+import com.example.domain.*;
 import com.example.repository.ContactRepositoryCRUD;
 import com.example.repository.ContactRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +26,7 @@ public class ContactService {
     private EntityManager em;
 
     @Autowired private DepartmentService departmentService;
+    @Autowired private LaptopService laptopService;
 
     // Basic CRUD -----------
 
@@ -58,14 +56,22 @@ public class ContactService {
         return update(contact);
     }
 
+    public Contact addLaptop(Contact c, String brand) {
+        // BiDi-relationship laptop-contact is managed by the owning side: Laptop.
+        // So, delegate this work to laptopservice.
+        laptopService.addNewLaptopToOwner(c, brand);
+        return em.merge(c);
+    }
+
     public Laptop getLazyLaptop(Contact contact, int index) {
         // transaction starts
-        Contact mergedAndManagedContact = em.merge(contact);
+        Contact managedContact = em.merge(contact);
 
-        // transaction still runs: lazy laptops can and will be fetched if requested
-        List<Laptop> laptops = mergedAndManagedContact.getLaptops();
+        // transaction runs, contact is "live"; lazy laptops can and will be fetched if requested
+        List<Laptop> laptops = managedContact.getLaptops();
 
-        return laptops.get(index); // works since laptops were fetched
+        // works since laptops are fetched
+        return laptops.get(index);
     }
 
     // Queries ==========================
@@ -73,8 +79,12 @@ public class ContactService {
     // JPQL ---------
 
     public List<Contact> findByParkingSpace(ParkingSpace ps) {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.parkingSpace.id = :doemaarwat", Contact.class);
-        query.setParameter("doemaarwat", ps.getId());
+        TypedQuery<Contact> query = em.createQuery(
+                "SELECT c " +
+                        "FROM Contact c " +
+                        "WHERE c.parkingSpace.id = :p_id", Contact.class) // no join needed
+                .setParameter("p_id", ps.getId());
+
         return query.getResultList();
     }
 
@@ -82,11 +92,50 @@ public class ContactService {
         TypedQuery<Contact> query = em.createQuery(
                 "SELECT c " +
                         "FROM ParkingSpace p, " +
-                        "   IN (p.contacts) c " +
-                        "WHERE p.id = :id", Contact.class)
-                .setParameter("id", ps.getId());
+                        "   IN (p.contacts) c " + // generates a join
+                        "WHERE p.id = :p_id", Contact.class)
+                .setParameter("p_id", ps.getId());
 
         return query.getResultList();
+    }
+
+    public List<Contact> findByLaptopUsingJoin(String laptopBrand) {
+        return em.createQuery(
+                "SELECT c " +
+                        "FROM Contact c " +
+                        "JOIN c.laptops l " + // without fetch, lazyinitexception when laptops are requested.
+                        "WHERE l.brand = :brand", Contact.class)
+                .setParameter("brand", laptopBrand)
+                .getResultList();
+    }
+
+    public List<Contact> findByLaptopAndFetchThemIteratively(String laptopBrand) {
+        List<Contact> contactsWithoutLaptops = findByLaptopUsingJoin(laptopBrand);
+
+        // to fetch each laptop, just query each laptop in the collection.
+        contactsWithoutLaptops.stream()
+                .flatMap(c -> c.getLaptops().stream().peek(l -> System.out.println("Fetching laptop " + l)).map(AbstractEntity::getId))
+                .forEach(i -> {/*do nothing*/});
+
+        return contactsWithoutLaptops;
+    }
+
+    public List<Contact> findByLaptopAndFetchThemUsingJoinFetch(String laptopBrand) {
+        return em.createQuery(
+                "SELECT c " +
+                        "FROM Contact c " +
+                        "JOIN fetch c.laptops l " + // with fetch: laptops are eagerly fetched by query.
+                        "WHERE l.brand = :brand", Contact.class)
+                .setParameter("brand", laptopBrand)
+                .getResultList();
+    }
+
+    public List<Contact> findWithLaptopsUsingJoinFetch() {
+        return em.createQuery(
+                "SELECT c " +
+                        "FROM Contact c " +
+                        "JOIN FETCH c.laptops", Contact.class)
+                .getResultList();
     }
 
     // Native query ---------
@@ -122,9 +171,9 @@ public class ContactService {
 
     public List<Contact> findByNameOrEmailWithRepo(String n, String e) { return repositoryCRUD.findByNameOrEmail(n, e); }
 
-    public List<Contact> findDrivers() {
+    public List<Contact> findDriversUsingStream() {
         return repositoryCRUD.findContacts() // stream
-                .filter(Contact::getHasDriversLicence)
+                .filter(Contact::getHasDriversLicence) // filter in java instead of in db
                 .collect(toList());
     }
 

@@ -8,6 +8,6 @@ import javax.persistence.Entity;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class VipContact extends Contact {
+public class ContactVip extends Contact {
     private int quote500Ranking;
 }

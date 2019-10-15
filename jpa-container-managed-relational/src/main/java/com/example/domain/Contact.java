@@ -2,10 +2,13 @@ package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
 import lombok.*;
+import org.hibernate.type.ClobType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -16,6 +19,7 @@ import static javax.persistence.TemporalType.DATE;
 @Builder
 @Getter
 @Setter
+@ToString(exclude = {"phones", "laptops", "worksAtDepartments", "emailAddresses"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -33,12 +37,13 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
     @Temporal(value = DATE) // choose which part we want: date, time, or datetime (=default)
     private Date birthDate;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 250) // column must be smaller than 1000 bytes for the unique constraint to work
     private String email;
 
     @Convert(converter = BooleanTFConverter.class)
     private Boolean hasDriversLicence;
 
+    @Lob
     @Basic(fetch = FetchType.LAZY) // lazy fetch on single field (instead of collections)
     private String resume; // can be a long piece of text, therefore fetch lazy
 
@@ -75,18 +80,19 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
 
     // --- Collection Valued relationships (@...ToMany) -------------------
 
-    @Singular // lombok: makes this plural field available in singular form to the builder
-    @OneToMany(cascade = {PERSIST, MERGE, REMOVE},// BiDi, passive side
-            mappedBy = "owner"/*,
-            fetch = FetchType.EAGER*/) // optionally override the default
-    @OrderBy("name ASC")
-    private List<Laptop> laptops;
-
     @OneToMany(cascade = {PERSIST, REMOVE}) // UniDi
-    @JoinTable(name = "contactworkphone", // UniDi OneToMany must use a JoinTable, since Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
-            joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
-            inverseJoinColumns = @JoinColumn(name = "phoneId"))
-    private Collection<Phone> phoneWork;
+    // @JoinTable(name = "contactworkphone", // UniDi OneToMany can use a JoinTable, since Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
+    //         joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
+    //         inverseJoinColumns = @JoinColumn(name = "phoneId"))
+    @JoinColumn(name = "contact_id") // create FK in phone back to this contact to prevent a jointable from being created
+    private List<Phone> phones;
+
+    @Singular // lombok: makes this plural field available in singular form to the builder
+    @OneToMany(cascade = ALL,// BiDi, passive side
+            mappedBy = "user"/*,
+            fetch = FetchType.EAGER*/) // optionally override the default
+    @OrderBy("brand ASC")
+    private List<Laptop> laptops;
 
     @Singular // lombok: makes this plural field available in singular form to the builder
     @ManyToMany(cascade = PERSIST) // BiDi, owning side; Department has a ManyToMany reference back to this Contact's departmentWorking-field and has mappedBy
@@ -98,9 +104,9 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
     // ------------ Methods --------------
 
     public void addLaptop(Laptop lap) {
-        if (this.laptops == null) laptops = new ArrayList<>();
-        this.laptops.add(lap);
-        lap.setOwner(this); // to fix the passive side (this) of the BiDi relationship
+        this.laptops.add(lap); // this is the passive side, so just follow the owning side.
+
+        // lap.setUser(this); // Don't do this! BiDi relation is synced by the owning side.
     }
 
     public void removeLaptop(Laptop lap) {
@@ -111,7 +117,7 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
 
     public void addDepartment(Department d) {
         this.worksAtDepartments.add(d);
-        d.add(this);
+        d.add(this); // this is the owning side, so it's responsible for managing the (BiDi) relationship.
     }
 
 }
