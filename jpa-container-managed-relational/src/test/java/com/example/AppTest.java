@@ -74,7 +74,7 @@ public class AppTest {
         bram = contactService.removeLeaseCar(bram); // merge one to one UniDi, remove orphan lease car
         Laptop dell = laptopService.addNewLaptopToOwner(bram, "DELL");// fix Bidi passive side
         dell = laptopService.addLaptopToOwner(dell, piet);// cascade merge on Laptop == update Laptop && insert Contact piet; piet is returned, so we can get its id
-        piet = dell.getUser(); // don't forget to refresh piet, since it has an id now
+        piet = dell.getContact(); // don't forget to refresh piet, since it has an id now
         contactService.addDepartment(piet, kenniscentrum); // update manytomany
         contactService.addLaptop(piet, "HP");
 

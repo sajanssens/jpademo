@@ -32,6 +32,8 @@ public class ContactService {
 
     public void create(Contact c) { em.persist(c); }
 
+    public Long persistAndFlush(Contact c) { em.persist(c); em.flush(); return c.getId();}
+
     public Contact find(long id) { return em.find(Contact.class, id); }
 
     public Contact update(Contact c) { return em.merge(c); }

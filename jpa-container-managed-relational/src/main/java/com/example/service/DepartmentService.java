@@ -1,6 +1,5 @@
 package com.example.service;
 
-import com.example.domain.Contact;
 import com.example.domain.Department;
 import org.springframework.stereotype.Service;
 

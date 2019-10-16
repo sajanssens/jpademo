@@ -2,10 +2,10 @@ package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
 import lombok.*;
-import org.hibernate.type.ClobType;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -80,19 +80,20 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
 
     // --- Collection Valued relationships (@...ToMany) -------------------
 
+    @Builder.Default // tell lombok's builder to use this initial value instead of the builder's default (which is unmodifiable list in this case)
     @OneToMany(cascade = {PERSIST, REMOVE}) // UniDi
     // @JoinTable(name = "contactworkphone", // UniDi OneToMany can use a JoinTable, since Phone, the many side, doesn't have a reference to this Contact and therefore no FK to contact
     //         joinColumns = @JoinColumn(name = "contactId"), // if JoinTable is omitted, JPA/Hibernate will generate it with default names
     //         inverseJoinColumns = @JoinColumn(name = "phoneId"))
-    @JoinColumn(name = "contact_id") // create FK in phone back to this contact to prevent a jointable from being created
-    private List<Phone> phones;
+    // @JoinColumn(name = "contact_id") // create FK in phone back to this contact to prevent a jointable from being created
+    private List<Phone> phones = new ArrayList<>();
 
-    @Singular // lombok: makes this plural field available in singular form to the builder
+    @Builder.Default // tell lombok's builder to use this initial value instead of the builder's default (which is unmodifiable list in this case)
     @OneToMany(cascade = ALL,// BiDi, passive side
-            mappedBy = "user"/*,
+            mappedBy = "contact"/*,
             fetch = FetchType.EAGER*/) // optionally override the default
     @OrderBy("brand ASC")
-    private List<Laptop> laptops;
+    private List<Laptop> laptops = new ArrayList<>();
 
     @Singular // lombok: makes this plural field available in singular form to the builder
     @ManyToMany(cascade = PERSIST) // BiDi, owning side; Department has a ManyToMany reference back to this Contact's departmentWorking-field and has mappedBy
@@ -104,20 +105,20 @@ public class Contact { // doesn't extend abstractentity so we can choose a diffe
     // ------------ Methods --------------
 
     public void addLaptop(Laptop lap) {
-        this.laptops.add(lap); // this is the passive side, so just follow the owning side.
-
-        // lap.setUser(this); // Don't do this! BiDi relation is synced by the owning side.
+        this.laptops.add(lap);
+        lap.setContact(this); // fix the other side of the BiDi-relationship; choose whether to do it on this side or on the other side
     }
 
     public void removeLaptop(Laptop lap) {
         this.laptops.remove(lap);
+        lap.setContact(null); // fix the other side of the BiDi-relationship; choose whether to do it on this side or on the other side
     }
 
     public void clearLeaseCar() { this.leaseCar = null; }
 
     public void addDepartment(Department d) {
         this.worksAtDepartments.add(d);
-        d.add(this); // this is the owning side, so it's responsible for managing the (BiDi) relationship.
+        d.add(this); // this is the owning side, so we make it responsible for managing the (BiDi) relationship.
     }
 
 }
