@@ -17,6 +17,7 @@
 	
 	<modules>
 		<module>jpa-with-jse</module>
+		<module>jpa-with-jse-relational</module>
         <module>jpa-container-managed</module>
         <module>jpa-container-managed-detach-demo</module>
         <module>jpa-container-managed-relational</module>
