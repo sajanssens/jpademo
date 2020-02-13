@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ContactService {
 
-    // @PersistenceContext // works only when ran in a container
     private EntityManager em;
 
     public ContactService(EntityManager em) {
@@ -16,9 +15,29 @@ public class ContactService {
     }
 
     public void save(Contact c) {
-        em.getTransaction().begin();
+        try {
+            begin();
+            em.persist(c);
+            commitAndClear();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        }
+    }
+
+    public void saveWithoutCatchAndRollback(Contact c) {
+        begin();
         em.persist(c);
-        em.getTransaction().commit();
+        commitAndClear();
+    }
+
+    public void update(Contact c) {
+        try {
+            begin();
+            em.merge(c);
+            commitAndClear();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        }
     }
 
     public List<Contact> findAll() {
@@ -30,24 +49,41 @@ public class ContactService {
         return em.find(Contact.class, id);
     }
 
-    public Contact updateFirstname(long id, String fn) {
-        Contact contact = find(id);
+    public Contact updateFirstname(Contact c, String fn) {
+        Contact contact = find(c.getId());
         if (contact != null) {
-            em.getTransaction().begin();
-            contact.setName(fn);
-            em.getTransaction().commit();
+            try {
+                begin();
+                contact.setName(fn);
+                commitAndClear();
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+            }
         }
         return contact;
     }
 
-    public void remove(long id) {
-        Contact contact = find(id);
+    public void remove(Contact c) {
+        Contact contact = find(c.getId());
         if (contact != null) {
-            em.getTransaction().begin();
-            em.remove(contact);
-            em.getTransaction().commit();
+            try {
+                begin();
+                em.remove(contact);
+                commitAndClear();
+            } catch (Exception e) {
+                em.getTransaction().rollback();
+            }
         }
+
     }
 
+    private void begin() {
+        em.getTransaction().begin();
+    }
+
+    private void commitAndClear() {
+        em.getTransaction().commit();
+        em.clear();
+    }
 
 }

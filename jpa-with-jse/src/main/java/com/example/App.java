@@ -25,7 +25,7 @@ public class App {
             System.out.println(contact);
         }
 
-        System.out.println("find one...");
+        System.out.println("find...");
         Contact contact1 = service.find(1);
         System.out.println("contact1=" + contact1);
         Contact contact2 = service.find(2);
@@ -33,14 +33,18 @@ public class App {
 
         System.out.println("updating by id...");
         System.out.println("before update: " + bram);
-        Contact arie = service.updateFirstname(1, "arie");
+        Contact arie = service.updateFirstname(contact1.getId(), "arie");
         System.out.println("after update: " + arie);
 
         System.out.println("updating complete object...");
         System.out.println("before update: " + arie);
         arie.setFirstname("harry");
-        service.save(arie);
-        Contact harry = service.find(1);
+
+        // service.save(arie);
+        // Contact harry = service.find(1);
+        //   or:
+        Contact harry = service.update(arie);
+
         System.out.println("after update: " + harry);
 
         System.out.println("removing...");

@@ -1,30 +1,25 @@
-package com.example.domain;
+package com.example.service;
+
+import com.example.domain.Contact;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class ContactService {
+public class ContactServiceRefactored {
 
-    // @PersistenceContext // works only when ran in a container
     private EntityManager em;
 
-    public ContactService(EntityManager em) {
+    public ContactServiceRefactored(EntityManager em) {
         this.em = em;
     }
 
     public void save(Contact c) {
-        em.getTransaction().begin();
-        em.persist(c);
-        em.getTransaction().commit();
+        performTransaction(em::persist, c);
     }
 
-    public Contact update(Contact c) {
-        em.getTransaction().begin();
-        Contact merged = em.merge(c);
-        em.getTransaction().commit();
-        return merged;
-    }
+    public void update(Contact c) { performTransaction(em::merge, c); }
 
     public List<Contact> findAll() {
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
@@ -38,9 +33,8 @@ public class ContactService {
     public Contact updateFirstname(long id, String fn) {
         Contact contact = find(id);
         if (contact != null) {
-            em.getTransaction().begin();
-            contact.setFirstname(fn);
-            em.getTransaction().commit();
+            String name = contact.getName();
+            performTransaction(contact::setName, name);
         }
         return contact;
     }
@@ -48,9 +42,18 @@ public class ContactService {
     public void remove(long id) {
         Contact contact = find(id);
         if (contact != null) {
+            performTransaction(em::remove, contact);
+        }
+    }
+
+    private <T> void performTransaction(Consumer<T> action, T t) {
+        try {
             em.getTransaction().begin();
-            em.remove(contact);
+            action.accept(t);
             em.getTransaction().commit();
+            em.clear();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
         }
     }
 
