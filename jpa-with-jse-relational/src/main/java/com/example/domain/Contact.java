@@ -1,5 +1,7 @@
 package com.example.domain;
 
+import com.example.util.BooleanTFConverter;
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -10,7 +12,15 @@ public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field
     private String name;
-    private Date birthdate;
+    private Date birthday;
+
+    // Special fields -----------------------------------------------
+
+    @Convert(converter = BooleanTFConverter.class)
+    private Boolean hasDriversLicence;
+
+    @Enumerated(EnumType.STRING)
+    private ContactType type;
 
     // --- Single Valued relationships  (@...ToOne) -----------------
 
@@ -42,17 +52,18 @@ public class Contact extends AbstractEntity {
 
     public Contact() {}
 
-    public Contact(String firstname, Date birthdate) {
+    public Contact(String firstname, Date birthday) {
         this.name = firstname;
-        this.birthdate = birthdate;
+        this.birthday = birthday;
     }
 
     @Override
     public String toString() {
         return "Contact{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", birthdate=" + birthdate +
+                "name='" + name + '\'' +
+                ", birthday=" + birthday +
+                ", hasDriversLicence=" + hasDriversLicence +
+                ", type=" + type +
                 '}';
     }
 
