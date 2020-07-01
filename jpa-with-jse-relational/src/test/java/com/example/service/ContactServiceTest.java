@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ContactServiceTest {
 
-    private ContactService contactService = new ContactService(em);
+    private final ContactService contactService = new ContactService(em);
 
     @Test
     public void testSave() {

@@ -8,6 +8,7 @@ import java.util.*;
 import static javax.persistence.CascadeType.PERSIST;
 
 @Entity
+@NamedQuery(name = "findAll", query = "select c from Contact c")
 public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field
@@ -52,6 +53,11 @@ public class Contact extends AbstractEntity {
 
     public Contact() {}
 
+    public Contact(String firstname) {
+        this.name = firstname;
+        this.birthday = new Date();
+    }
+
     public Contact(String firstname, Date birthday) {
         this.name = firstname;
         this.birthday = birthday;
@@ -82,6 +88,10 @@ public class Contact extends AbstractEntity {
     public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
 
     public void addPhone(Phone p) { this.phones.add(p);}
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
 
     public void addLaptop(Laptop lap) {
         this.laptops.add(lap);
