@@ -22,13 +22,22 @@ public class ContactDao {
 
     public ContactDao() { }
 
-    public ContactDao(EntityManager em) { this.em = em; }
-
     public void insert(Contact p) {
+        try {
+            em.getTransaction().begin();
+            em.persist(p); // in persistence context
+            em.getTransaction().commit();
+            em.detach(p);
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+        }
+    }
+
+    public void insertWithoutCatchAndRollback(Contact c) {
         em.getTransaction().begin();
-        em.persist(p); // in persistence context
+        em.persist(c); // in persistence context
         em.getTransaction().commit();
-        em.detach(p);
+        em.detach(c);
     }
 
     public Contact select(long id) {
@@ -43,15 +52,15 @@ public class ContactDao {
         return query.getResultList(); // 2
     }
 
-    public List<Contact> selectTempEmployees() {
-        TypedQuery<Contact> query = em.createQuery("select p from Contact p where type(p) = TemporaryEmployee", Contact.class);
-        return query.getResultList(); // 2
-    }
-
     public List<Contact> selectAll(String name) {
         TypedQuery<Contact> query = em.createQuery("select p from Contact p where p.name = :firstarg", Contact.class);
         query.setParameter("firstarg", name);
         return query.getResultList(); // 3
+    }
+
+    public List<Contact> selectTempEmployees() {
+        TypedQuery<Contact> query = em.createQuery("select p from Contact p where type(p) = TemporaryEmployee", Contact.class);
+        return query.getResultList(); // 2
     }
 
     public List<Contact> findByPhone(long phoneId) {
@@ -70,7 +79,7 @@ public class ContactDao {
         return findAll.getResultList();
     }
 
-    public void delete(Long id) {
+    public void delete(long id) {
         Contact select = em.find(Contact.class, id);
         if (select != null) {
             em.getTransaction().begin();
@@ -79,7 +88,7 @@ public class ContactDao {
         }
     }
 
-    public Contact updateFirstname(int id, String name) {
+    public Contact updateFirstname(long id, String name) {
         Contact p = select(id);
         if (p != null) {
             em.getTransaction().begin();

@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import java.util.function.Consumer;
 
-public class ContactServiceDetachDRY {
+public class ContactDaoDetachDRY {
 
     // @PersistenceContext // works only when ran in a container
     private final EntityManager em;
 
-    private final Logger log = LoggerFactory.getLogger(ContactServiceDetachDRY.class);
+    private final Logger log = LoggerFactory.getLogger(ContactDaoDetachDRY.class);
 
-    public ContactServiceDetachDRY(EntityManager em) {
+    public ContactDaoDetachDRY(EntityManager em) {
         this.em = em;
     }
 

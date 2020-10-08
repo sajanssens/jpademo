@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.domain.Contact;
-import com.example.domain.ContactService;
+import com.example.domain.ContactDao;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -14,7 +14,7 @@ public class App {
     private static final EntityManager em = Persistence.createEntityManagerFactory("ContactServiceMySQL").createEntityManager();
 
     private static void test() {
-        ContactService service = new ContactService(em);
+        ContactDao service = new ContactDao(em);
 
         Contact bram = new Contact("Bram", new Date());
         service.save(bram);
