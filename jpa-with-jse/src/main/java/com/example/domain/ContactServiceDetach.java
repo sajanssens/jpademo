@@ -1,34 +1,41 @@
 package com.example.domain;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ContactService {
+import javax.persistence.EntityManager;
+
+public class ContactServiceDetach {
 
     // @PersistenceContext // works only when ran in a container
     private final EntityManager em;
 
-    public ContactService(EntityManager em) {
+    private final Logger log = LoggerFactory.getLogger(ContactServiceDetach.class);
+
+    public ContactServiceDetach(EntityManager em) {
         this.em = em;
     }
 
     public void save(Contact c) {
-        em.getTransaction().begin();
-        em.persist(c);
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.persist(c);
+            em.flush();
+            em.clear(); //detach
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            log.error("Something bad happened. Rolling back... " + e.getMessage());
+            em.getTransaction().rollback();
+        }
     }
 
     public Contact update(Contact c) {
         em.getTransaction().begin();
         Contact merged = em.merge(c);
+        em.flush();
+        em.clear(); //detach
         em.getTransaction().commit();
         return merged;
-    }
-
-    public List<Contact> findAll() {
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
-        return query.getResultList();
     }
 
     public Contact find(long id) {
@@ -40,18 +47,11 @@ public class ContactService {
         if (contact != null) {
             em.getTransaction().begin();
             contact.setFirstname(fn);
+            em.flush();
+            em.clear(); //detach
             em.getTransaction().commit();
         }
         return contact;
-    }
-
-    public void remove(long id) {
-        Contact contact = find(id);
-        if (contact != null) {
-            em.getTransaction().begin();
-            em.remove(contact);
-            em.getTransaction().commit();
-        }
     }
 
 }

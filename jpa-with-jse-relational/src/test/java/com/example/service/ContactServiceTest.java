@@ -7,13 +7,15 @@ import java.util.Date;
 import java.util.List;
 
 import static com.example.util.EntityManagerFactory.em;
+import static com.example.util.EntityManagerFactory.emH2;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+// TODO: move to src/it
 public class ContactServiceTest {
 
-    private final ContactService contactService = new ContactService(em);
+    private final ContactService contactService = new ContactService(emH2);
 
     @Test
     public void testSave() {

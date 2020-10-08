@@ -8,11 +8,13 @@ import javax.persistence.PersistenceException;
 import java.util.Date;
 
 import static com.example.util.EntityManagerFactory.em;
+import static com.example.util.EntityManagerFactory.emH2;
 import static org.junit.Assert.assertTrue;
 
+// TODO: move to src/it
 public class ContactServiceDetachedTest {
 
-    private ContactService contactService = new ContactService(em);
+    private final ContactService contactService = new ContactService(emH2);
 
     @Test(expected = PersistenceException.class)
     public void testSaveDetachedEntityWithoutCatchAndRollback() {

@@ -33,8 +33,7 @@ public class ContactServiceRefactored {
     public Contact updateFirstname(long id, String fn) {
         Contact contact = find(id);
         if (contact != null) {
-            String name = contact.getName();
-            performTransaction(contact::setName, name);
+            performTransaction(contact::setName, fn);
         }
         return contact;
     }

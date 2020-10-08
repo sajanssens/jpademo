@@ -27,7 +27,7 @@ public class AppDetachment implements CommandLineRunner {
         System.out.println("updating 2...");
         System.out.println(arie);
         arie.setFirstname("harry");
-        // service.save(arie); // won't work now anymore, because entity is detached already, since transaction is finished
+        // service.save(arie); // won't work now anymore, because entity is detached already, since transaction is finished and em has closed persistence context
         Contact harryOrArie = service.find(1); // will stay arie, not harry, in contrast to jpawithjee/jse examples
         System.out.println(harryOrArie);
         Contact harry = service.update(arie); // will update arie to harry

@@ -11,7 +11,7 @@ import java.util.List;
 public class App {
 
     // App creates EntityManager
-    private static EntityManager em = Persistence.createEntityManagerFactory("ContactServiceMySQL").createEntityManager();
+    private static final EntityManager em = Persistence.createEntityManagerFactory("ContactServiceMySQL").createEntityManager();
 
     private static void test() {
         ContactService service = new ContactService(em);
