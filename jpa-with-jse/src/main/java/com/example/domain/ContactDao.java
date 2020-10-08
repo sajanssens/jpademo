@@ -7,7 +7,7 @@ import java.util.List;
 public class ContactDao {
 
     // @PersistenceContext // works only when ran in a container
-    private final EntityManager em;
+    private EntityManager em;
 
     public ContactDao(EntityManager em) {
         this.em = em;
