@@ -3,9 +3,12 @@ package com.example.domain;
 import com.example.util.BooleanTFConverter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.TemporalType.DATE;
 
 @Entity
 @NamedQuery(name = "findAll", query = "select c from Contact c")
@@ -13,15 +16,33 @@ public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field
     private String name;
-    private Date birthday;
 
     // Special fields -----------------------------------------------
+
+    @Temporal(value = DATE)
+    private Date birthday = new Date();
+
+    // Better: use LocalDate or LocalDateTime
+    // Will be converted (automatically) to time by LocalDateTimeAttributeConverter
+    // @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime timeOfBirth = LocalDateTime.of(1979, 8, 22, 6, 15, 0, 0); // 22-08-1979 06h:15m:00s:00ms
 
     @Convert(converter = BooleanTFConverter.class)
     private Boolean hasDriversLicence;
 
     @Enumerated(EnumType.STRING)
     private ContactType type;
+
+    @Embedded
+    private Address addressWork;
+
+    @Lob // CLOB Character large object
+    @Basic(fetch = LAZY) // only loaded when explicitly called (with getResume()) on a managed object.
+    private String resume;
+
+    @Lob // BLOB Binary large object
+    @Basic(fetch = LAZY)
+    private byte[] image;
 
     // --- Single Valued relationships  (@...ToOne) -----------------
 
@@ -76,6 +97,8 @@ public class Contact extends AbstractEntity {
     public String getName() { return name; }
 
     public void setName(String name) { this.name = name; }
+
+    public String getResume() { return resume; }
 
     public Department getBossOfDepartment() { return bossOfDepartment; }
 
