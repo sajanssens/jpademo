@@ -4,16 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.function.Consumer;
 
-public class ContactDaoDetachDRY {
+public class ContactDaoDetachAndRollbackDRY {
 
     // @PersistenceContext // works only when ran in a container
     private final EntityManager em;
 
-    private final Logger log = LoggerFactory.getLogger(ContactDaoDetachDRY.class);
+    private final Logger log = LoggerFactory.getLogger(ContactDaoDetachAndRollbackDRY.class);
 
-    public ContactDaoDetachDRY(EntityManager em) {
+    public ContactDaoDetachAndRollbackDRY(EntityManager em) {
         this.em = em;
     }
 
@@ -26,6 +28,11 @@ public class ContactDaoDetachDRY {
         return c;
     }
 
+    public List<Contact> findAll() {
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c", Contact.class);
+        return query.getResultList();
+    }
+
     public Contact find(long id) {
         return em.find(Contact.class, id);
     }
@@ -36,12 +43,19 @@ public class ContactDaoDetachDRY {
         return contact;
     }
 
-    private <T> void performTransaction(Consumer<T> action, T t) {
-        if (t == null) return;
+    public void remove(long id) {
+        Contact contact = find(id);
+        if (contact != null) {
+            performTransaction(em::remove, contact);
+        }
+    }
+
+    private <T> void performTransaction(Consumer<T> action, T subject) {
+        if (subject == null) return;
 
         try {
             em.getTransaction().begin();
-            action.accept(t);
+            action.accept(subject); // perform action with subject as argument
             em.flush();
             em.clear(); //detach
             em.getTransaction().commit();

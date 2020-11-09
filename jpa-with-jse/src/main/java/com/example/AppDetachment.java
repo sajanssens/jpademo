@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.domain.Contact;
-import com.example.domain.ContactDaoDetach;
+import com.example.domain.ContactDaoDetachAndRollback;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
@@ -13,7 +13,7 @@ public class AppDetachment {
     private static final EntityManager em = Persistence.createEntityManagerFactory("ContactServiceMySQL").createEntityManager();
 
     private static void test() {
-        ContactDaoDetach service = new ContactDaoDetach(em);
+        ContactDaoDetachAndRollback service = new ContactDaoDetachAndRollback(em);
 
         Contact bram = new Contact("Bram", new Date());
         service.save(bram);
