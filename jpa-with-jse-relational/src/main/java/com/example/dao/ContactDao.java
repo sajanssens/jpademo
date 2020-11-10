@@ -30,6 +30,7 @@ public class ContactDao {
             em.detach(p);
         } catch (Exception e) {
             em.getTransaction().rollback();
+            throw e;
         }
     }
 

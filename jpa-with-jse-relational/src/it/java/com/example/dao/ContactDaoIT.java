@@ -4,7 +4,6 @@ import com.example.App;
 import com.example.EntityManagerProducerAlt;
 import com.example.domain.*;
 import org.assertj.core.api.Assertions;
-import org.hamcrest.MatcherAssert;
 import org.hibernate.LazyInitializationException;
 import org.jboss.weld.junit5.auto.AddBeanClasses;
 import org.jboss.weld.junit5.auto.AddPackages;
@@ -90,6 +89,19 @@ class ContactDaoIT {
         bram.setName("Piet");
         assertThrows(PersistenceException.class, () -> dao.insertWithoutCatchAndRollback(bram)); // cannot save a detached entity; exception is thrown
 
+    }
+
+    @Test
+    public void whenContactWithInvalidNameIsInsertedItIsRefused() {
+        Contact bramTooLong = new Contact("Bram bram bram".repeat(10), new Date());
+        assertThrows(RuntimeException.class, () -> dao.insert(bramTooLong));
+    }
+
+    @Test
+    public void whenContactWithInvalidEmailIsInsertedItIsRefused() {
+        Contact bramInvalidEmail = new Contact("Bram", new Date());
+        bramInvalidEmail.setEmailAddress("bram_at_test.com");
+        assertThrows(RuntimeException.class, () -> dao.insert(bramInvalidEmail));
     }
 
     @Test
