@@ -5,7 +5,7 @@
              http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
 
-    <persistence-unit name="H2">
+    <persistence-unit name="H2-IT">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>com.example.domain.Contact</class>
         <class>com.example.domain.Department</class>
@@ -21,7 +21,6 @@
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-            <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
     </persistence-unit>

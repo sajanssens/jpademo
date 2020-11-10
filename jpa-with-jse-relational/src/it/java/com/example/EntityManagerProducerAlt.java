@@ -12,6 +12,6 @@ public class EntityManagerProducerAlt {
 
     @Produces
     public static EntityManager h2() {
-        return Persistence.createEntityManagerFactory("H2").createEntityManager();
+        return Persistence.createEntityManagerFactory("H2-IT").createEntityManager();
     }
 }
