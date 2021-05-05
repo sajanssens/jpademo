@@ -17,6 +17,7 @@
     </properties>
 
     <modules>
+        <module>jpa-best-practices</module>
         <module>jpa-with-jse</module>
         <module>jpa-with-jse-relational</module>
         <module>jpa-container-managed</module>
