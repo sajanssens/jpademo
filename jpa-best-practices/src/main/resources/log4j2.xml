@@ -13,10 +13,9 @@
     </Appenders>
 
     <Loggers>
+        <Logger name="org.hibernate.SQL" level="DEBUG"/> <!--Log all SQL statements-->
+        <Logger name="org.hibernate.type.descriptor.sql" level="TRACE"/> <!--Log parameters values-->
         <Logger name="org.hibernate" level="INFO"/>
-
-        <!--to show binding parameter log statements:-->
-        <Logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
 
         <Root level="DEBUG">
             <AppenderRef ref="console"/>
