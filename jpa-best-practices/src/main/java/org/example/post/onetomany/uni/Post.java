@@ -14,7 +14,11 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-@NamedQuery(name = "Post.findWithDetails", query = "SELECT p FROM Post p JOIN FETCH p.comments WHERE p.id=:id")
+@NamedQueries(value = {
+        @NamedQuery(name = "Post.findWithDetailsFetched", query = "SELECT p FROM Post p JOIN FETCH p.comments WHERE p.id=:id"),
+        @NamedQuery(name = "Post.findAllWithDetailsFetched", query = "SELECT p FROM Post p JOIN FETCH p.comments"), // creates duplicates, don't use this!
+        @NamedQuery(name = "Post.findAllDistinctWithDetailsFetched", query = "SELECT DISTINCT(p) FROM Post p JOIN FETCH p.comments")
+})
 public class Post {
 
     @Id @GeneratedValue

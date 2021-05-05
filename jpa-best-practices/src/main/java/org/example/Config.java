@@ -5,6 +5,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import static org.example.Transaction.executeTransaction;
 
@@ -58,10 +59,20 @@ public class Config {
         return em.find(c, id);
     }
 
-    public static <T> T findWithDetails(EntityManager em, long id, Class<T> c) {
-        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findWithDetails", c);
+    public static <T> T findWithDetailsFetched(EntityManager em, long id, Class<T> c) {
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findWithDetailsFetched", c);
         query.setParameter("id", id);
         return query.getSingleResult();
+    }
+
+    public static <T> List<T> findAllWithDetailsFetched(EntityManager em, Class<T> c) {
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllWithDetailsFetched", c);
+        return query.getResultList();
+    }
+
+    public static <T> List<T> findAllDistinctWithDetailsFetched(EntityManager em, Class<T> c) {
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllDistinctWithDetailsFetched", c);
+        return query.getResultList();
     }
 
 }

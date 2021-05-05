@@ -8,9 +8,11 @@ Points to consider are these:
 
 Some conclusions:
 
-1. When there is no need to use a bidirectional relationship, use unidirectional (except OneToMany!) and use a query to fetch the other
-   side.
+1. When there is no need to use a bidirectional relationship, use unidirectional (except OneToMany!) and use a query to
+   fetch the other side.
 2. Unidirectional OneToMany is evil: use alternatives.
+    - If you really need OneToMany Uni, use join fetch JPQL queries to fetch the many side, combined with DISTINCT to
+      prevent duplicate results.
 3. Bidirectional OneToMany is equal to bidirectional ManyToOne.
 
 We've used several sources, which are mentioned in the code.
