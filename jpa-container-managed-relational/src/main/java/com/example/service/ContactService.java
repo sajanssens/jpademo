@@ -45,6 +45,7 @@ public class ContactService {
 
     // Managing relationships
 
+
     public Contact removeLeaseCar(Contact c) {
         Contact contact = find(c.getId());
         contact.clearLeaseCar();

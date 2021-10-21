@@ -17,6 +17,7 @@ import static javax.persistence.TemporalType.DATE;
 public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field
+    @Column(name = "C_NAME")
     @Size(max = 100)
     private String name;
 
@@ -101,25 +102,27 @@ public class Contact extends AbstractEntity {
                 '}';
     }
 
-    public String getName() { return name; }
+    public String getName() {return name;}
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {this.name = name;}
 
-    public void setEmailAddress(String email) { this.emailAddress = email; }
+    public void setEmailAddress(String email) {this.emailAddress = email;}
 
-    public String getResume() { return resume; }
+    public String getResume() {return resume;}
 
-    public Department getBossOfDepartment() { return bossOfDepartment; }
+    public Department getBossOfDepartment() {return bossOfDepartment;}
 
-    public void setBossOfDepartment(Department bossOfDepartment) { this.bossOfDepartment = bossOfDepartment; }
+    public void setBossOfDepartment(Department bossOfDepartment) {this.bossOfDepartment = bossOfDepartment;}
 
-    public ParkingSpace getParkingSpace() { return parkingSpace; }
+    public ParkingSpace getParkingSpace() {return parkingSpace;}
 
-    public void setParkingSpace(ParkingSpace parkingSpaces) { this.parkingSpace = parkingSpaces; }
+    public void setParkingSpace(ParkingSpace parkingSpaces) {this.parkingSpace = parkingSpaces;}
 
-    public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
+    public void setLeaseCar(Car leaseCar) {this.leaseCar = leaseCar;}
 
-    public void addPhone(Phone p) { this.phones.add(p);}
+    public void setResume(String resume) {this.resume = resume;}
+
+    public void addPhone(Phone p) {this.phones.add(p);}
 
     public List<Phone> getPhones() {
         return phones;
@@ -129,6 +132,13 @@ public class Contact extends AbstractEntity {
         this.laptops.add(lap);
         lap.setContact(this); // fix the other side of the BiDi-relationship; choose whether to do it on this side or on the other side
     }
+
+    public void removeLaptop(Laptop lap) {
+        this.laptops.remove(lap);
+        lap.setContact(null); // fix the other side of the BiDi-relationship; choose whether to do it on this side or on the other side
+    }
+
+    public void clearLeaseCar() {this.leaseCar = null;}
 
     public void addWorksAt(Department d) {
         this.worksAt.add(d);

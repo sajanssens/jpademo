@@ -36,7 +36,7 @@ class ContactDaoTest {
         doNothing().when(entityTransactionMock).commit();
 
         // when
-        dao.insert(new Contact());
+        dao.save(new Contact());
 
         // then
         verify(emMock).persist(isA(Contact.class));
@@ -53,7 +53,7 @@ class ContactDaoTest {
         when(emMock.find(any(), anyLong())).thenReturn(mock);
 
         // when
-        Contact select = dao.select(1L);
+        Contact select = dao.find(1L);
 
         // then
         verify(emMock).find(any(), eq(1L));
@@ -74,7 +74,7 @@ class ContactDaoTest {
         when(emMock.createQuery(anyString(), eq(Contact.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(employees);
 
-        List<Contact> all = dao.selectAll();
+        List<Contact> all = dao.findAll();
         assertThat(all.size()).isEqualTo(3);
     }
 }

@@ -1,18 +1,16 @@
-package com.example.service;
+package com.example.dao;
 
 import com.example.domain.Department;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class DepartmentService {
+public class DepartmentDao {
 
+    @Inject
     private EntityManager em;
-
-    public DepartmentService(EntityManager em) {
-        this.em = em;
-    }
 
     public void save(Department d) {
         em.getTransaction().begin();

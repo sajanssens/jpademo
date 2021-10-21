@@ -23,7 +23,7 @@ class ContactDaoTest {
     @Mock EntityTransaction entityTransactionMock;
 
     @InjectMocks
-    ContactDao dao = new ContactDao(emMock);
+    ContactDao dao;
 
     @Test
     void whenInsertIsCalledATransactionIsBegunAndPersistIsCalledAndCommitted() {
