@@ -13,7 +13,7 @@
 
     <properties>
         <hibernate.version>5.4.0.Final</hibernate.version>
-        <h2.version>1.4.197</h2.version>
+        <h2.version>2.1.210</h2.version>
         <skipUnitTests>false</skipUnitTests>
         <skipIntegrationTests>false</skipIntegrationTests>
     </properties>
