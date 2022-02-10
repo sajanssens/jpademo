@@ -12,7 +12,7 @@
     <artifactId>jpa-with-jse</artifactId>
 
     <properties>
-        <hibernate.version>5.4.0.Final</hibernate.version>
+        <hibernate.version>5.4.24.Final</hibernate.version>
         <h2.version>1.4.197</h2.version>
         <skipUnitTests>false</skipUnitTests>
         <skipIntegrationTests>false</skipIntegrationTests>
