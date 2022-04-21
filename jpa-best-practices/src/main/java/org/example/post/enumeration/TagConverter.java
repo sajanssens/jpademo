@@ -2,7 +2,10 @@ package org.example.post.enumeration;
 
 import javax.persistence.AttributeConverter;
 
-import static org.example.post.enumeration.Tag.*;
+import static org.example.post.enumeration.Tag.CLOUD;
+import static org.example.post.enumeration.Tag.DATA;
+import static org.example.post.enumeration.Tag.JAVA;
+import static org.example.post.enumeration.Tag.NEWS;
 
 public class TagConverter implements AttributeConverter<Tag, Integer> {
 
@@ -13,21 +16,13 @@ public class TagConverter implements AttributeConverter<Tag, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(Tag value) {
-        if (value == null) return null;
-
-        int result = 0;
-
-        switch (value) {
-            case NEWS:
-                result = NEWS_ID; break;
-            case JAVA:
-                result = JAVA_ID; break;
-            case DATA:
-                result = DATA_ID; break;
-            case CLOUD:
-                result = CLOUD_ID; break;
-        }
-        return result;
+        return switch (value) {
+            case null -> null;
+            case NEWS -> NEWS_ID;
+            case JAVA -> JAVA_ID;
+            case DATA -> DATA_ID;
+            case CLOUD -> CLOUD_ID;
+        };
     }
 
     @Override

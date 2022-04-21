@@ -2,7 +2,12 @@ package com.example.dao;
 
 import com.example.App;
 import com.example.EntityManagerProducerAlt;
-import com.example.domain.*;
+import com.example.domain.Car;
+import com.example.domain.Contact;
+import com.example.domain.Department;
+import com.example.domain.Laptop;
+import com.example.domain.ParkingSpace;
+import com.example.domain.Phone;
 import org.assertj.core.api.Assertions;
 import org.hibernate.LazyInitializationException;
 import org.jboss.weld.junit5.auto.AddBeanClasses;
@@ -16,14 +21,20 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.util.EntityManagerFactory.em;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableAutoWeld
 @AddPackages(App.class)
@@ -120,13 +131,23 @@ class ContactDaoIT {
 
         bram.setName("Piet");
         assertThrows(PersistenceException.class, () -> dao.saveWithoutCatchAndRollback(bram)); // cannot save a detached entity; exception is thrown
-
     }
 
     @Test
     public void whenContactWithInvalidNameIsInsertedItIsRefused() {
         Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
         assertThrows(RuntimeException.class, () -> dao.save(bramTooLong));
+    }
+
+    @Test
+    public void whenContactWithInvalidNameIsValidatedIsReturnsConstraintViolation() {
+        Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Contact>> validate = validator.validate(bramTooLong);
+        validate.forEach(v -> System.out.println(v.getMessage()));
+
+        assertTrue(validate.size() > 0);
     }
 
     @Test
@@ -264,8 +285,7 @@ class ContactDaoIT {
         Assertions.assertThat(byPhone.get(0).getId()).isEqualTo(e.getId());
     }
 
-    private void log(Object o) {log.info(o + "");}
+    private void log(Object o) { log.info(o + ""); }
 
-    private boolean isDetached(Contact c) {return !em.contains(c);}
-
+    private boolean isDetached(Contact c) { return !em.contains(c); }
 }
