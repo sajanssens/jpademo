@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
-import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -140,14 +140,14 @@ class ContactDaoIT {
     }
 
     @Test
-    public void whenContactWithInvalidNameIsValidatedIsReturnsConstraintViolation() {
-        Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
+    public void whenContactWithInvalidNameIsValidatedItReturnsConstraintViolation() {
+        try (ValidatorFactory vf = Validation.buildDefaultValidatorFactory()) {
+            Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
+            Set<ConstraintViolation<Contact>> validate = vf.getValidator().validate(bramTooLong);
+            validate.forEach(v -> System.out.println(v.getMessage()));
 
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<Contact>> validate = validator.validate(bramTooLong);
-        validate.forEach(v -> System.out.println(v.getMessage()));
-
-        assertTrue(validate.size() > 0);
+            assertTrue(validate.size() > 0);
+        }
     }
 
     @Test
@@ -259,7 +259,6 @@ class ContactDaoIT {
     }
 
     @Test
-    @Disabled
     void whenContactIsSelectedItsPhonesAreNotLoaded() {
         Contact a = new Contact("A");
         a.addPhone(new Phone("1"));
