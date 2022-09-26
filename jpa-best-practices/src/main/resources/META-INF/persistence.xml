@@ -10,7 +10,7 @@
         <class>org.example.post.enumeration.Category</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -23,7 +23,7 @@
         <class>org.example.post.manytoone.uni.PostComment</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -36,7 +36,7 @@
         <class>org.example.post.manytoone.bidi.PostComment</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -49,7 +49,7 @@
         <class>org.example.post.onetomany.uni.PostComment</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -62,7 +62,7 @@
         <class>org.example.post.onetomany.bidi.PostComment</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -75,7 +75,7 @@
         <class>org.example.post.manytomany.bidi.Tag</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -88,7 +88,7 @@
         <class>org.example.post.manytomany.uni.Tag</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -101,7 +101,7 @@
         <class>org.example.post.onetoone.uni.PostDetails</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -114,7 +114,7 @@
         <class>org.example.post.onetoone.bidi.PostDetails</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/post"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/forum"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="root"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>

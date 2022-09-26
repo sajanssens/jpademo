@@ -44,7 +44,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.24</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -55,22 +55,22 @@
 
     <build>
         <plugins>
-          <!--  <plugin>
-                <groupId>org.hibernate.orm.tooling</groupId>
-                <artifactId>hibernate-enhance-maven-plugin</artifactId>
-                <version>${hibernate.version}</version>
-                <executions>
-                    <execution>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <enableLazyInitialization>true</enableLazyInitialization>
-                        </configuration>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
+            <!--  <plugin>
+                  <groupId>org.hibernate.orm.tooling</groupId>
+                  <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                  <version>${hibernate.version}</version>
+                  <executions>
+                      <execution>
+                          <configuration>
+                              <failOnError>true</failOnError>
+                              <enableLazyInitialization>true</enableLazyInitialization>
+                          </configuration>
+                          <goals>
+                              <goal>enhance</goal>
+                          </goals>
+                      </execution>
+                  </executions>
+              </plugin>-->
         </plugins>
     </build>
 

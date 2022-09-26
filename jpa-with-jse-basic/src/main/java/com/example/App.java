@@ -8,6 +8,9 @@ import javax.persistence.Persistence;
 import java.util.Date;
 import java.util.List;
 
+// To start mysql, see README in parent.
+// Next create the database 'jpa-with-jse' on mysql to run this example.
+
 public class App {
 
     // App creates EntityManager
