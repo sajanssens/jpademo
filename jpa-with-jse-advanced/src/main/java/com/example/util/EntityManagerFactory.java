@@ -1,7 +1,7 @@
 package com.example.util;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 
 public final class EntityManagerFactory {
 

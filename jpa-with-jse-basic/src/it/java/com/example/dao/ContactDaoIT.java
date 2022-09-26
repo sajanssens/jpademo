@@ -6,8 +6,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import java.util.Date;
 
 class ContactDaoIT {
@@ -18,7 +18,7 @@ class ContactDaoIT {
 
     @AfterEach
     public void teardown() {
-        // If some tests have open transactions because of exceptions (like in testSaveDetachedEntityWithoutCatchAndRollback)
+        // If some tests have open transactions because of exceptions
         if (em.getTransaction().isActive()) {
             em.getTransaction().rollback();
         }

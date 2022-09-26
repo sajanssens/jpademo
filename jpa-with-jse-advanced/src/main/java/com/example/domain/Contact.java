@@ -2,15 +2,15 @@ package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.TemporalType.DATE;
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.TemporalType.DATE;
 
 @Entity
 @NamedQuery(name = "findAll", query = "select c from Contact c")

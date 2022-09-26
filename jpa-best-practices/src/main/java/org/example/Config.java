@@ -1,8 +1,9 @@
 package org.example;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -27,9 +28,7 @@ public class Config {
     public static void dropAndCreateDatabase() {
         executeTransaction(c -> {
             try {
-                Statement s = c.createStatement();
-                s.execute("DROP DATABASE IF EXISTS POST");
-                s.execute("CREATE DATABASE IF NOT EXISTS POST");
+                Statement s = c.createStatement(); s.execute("DROP DATABASE IF EXISTS POST"); s.execute("CREATE DATABASE IF NOT EXISTS POST");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -37,21 +36,15 @@ public class Config {
     }
 
     public static <T> void persist(EntityManager em, T e) {
-        em.getTransaction().begin();
-        em.persist(e);
-        em.getTransaction().commit();
+        em.getTransaction().begin(); em.persist(e); em.getTransaction().commit();
     }
 
     public static <T> void merge(EntityManager em, T e) {
-        em.getTransaction().begin();
-        em.merge(e);
-        em.getTransaction().commit();
+        em.getTransaction().begin(); em.merge(e); em.getTransaction().commit();
     }
 
     public static void remove(EntityManager em, long id, Class<?> c) {
-        em.getTransaction().begin();
-        em.remove(em.find(c, id));
-        em.getTransaction().commit();
+        em.getTransaction().begin(); em.remove(em.find(c, id)); em.getTransaction().commit();
     }
 
     public static <T> T find(EntityManager em, long id, Class<T> c) {
@@ -60,19 +53,14 @@ public class Config {
     }
 
     public static <T> T findWithDetailsFetched(EntityManager em, long id, Class<T> c) {
-        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findWithDetailsFetched", c);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findWithDetailsFetched", c); query.setParameter("id", id); return query.getSingleResult();
     }
 
     public static <T> List<T> findAllWithDetailsFetched(EntityManager em, Class<T> c) {
-        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllWithDetailsFetched", c);
-        return query.getResultList();
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllWithDetailsFetched", c); return query.getResultList();
     }
 
     public static <T> List<T> findAllDistinctWithDetailsFetched(EntityManager em, Class<T> c) {
-        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllDistinctWithDetailsFetched", c);
-        return query.getResultList();
+        TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllDistinctWithDetailsFetched", c); return query.getResultList();
     }
-
 }

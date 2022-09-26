@@ -1,7 +1,7 @@
 package com.example.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import java.util.ArrayList;
 import java.util.List;
 

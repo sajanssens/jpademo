@@ -1,6 +1,6 @@
 package com.example.util;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class BooleanTFConverter implements AttributeConverter<Boolean, String> {
 

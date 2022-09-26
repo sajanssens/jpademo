@@ -2,11 +2,11 @@ package com.example.domain;
 
 import com.example.dao.Identifiable;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @MappedSuperclass
 public abstract class AbstractEntity implements Identifiable<Long> {
