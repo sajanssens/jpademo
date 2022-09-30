@@ -6,7 +6,7 @@ import com.example.domain.Car;
 import com.example.domain.Contact;
 import com.example.domain.Department;
 import com.example.domain.Laptop;
-import com.example.domain.ParkingSpace;
+import com.example.domain.Team;
 import com.example.domain.Phone;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
@@ -76,7 +76,7 @@ class ContactDaoIT {
 
     @Test
     void whenContactsHaveParkingSpaceTheyCanBeFound() {
-        ParkingSpace ps = ParkingSpace.builder().number(1).build();
+        Team ps = Team.builder().number(1).build();
 
         Contact bram = new Contact("Bram", new Date());
         Contact mieke = new Contact("Mieke", new Date());
@@ -95,7 +95,7 @@ class ContactDaoIT {
     public void saveWithDetailsDemo() {
         Contact bram = new Contact("Bram", new Date());
         Department kc = new Department("Kenniscentrum");
-        ParkingSpace ps = ParkingSpace.builder().number(1).build();
+        Team ps = Team.builder().number(1).build();
         Car c = Car.builder().brand("Skoda").build();
         Phone p = Phone.builder().number("06123456789").build();
         Laptop lap = Laptop.builder().brand("DELL").build();

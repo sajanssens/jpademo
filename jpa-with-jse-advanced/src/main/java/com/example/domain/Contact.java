@@ -60,7 +60,7 @@ public class Contact extends AbstractEntity {
 
     // BiDi, owning side
     @ManyToOne(cascade = PERSIST)
-    private ParkingSpace parkingSpace;
+    private Team team;
 
     // UniDi
     @OneToOne(cascade = PERSIST, orphanRemoval = true)
@@ -114,9 +114,9 @@ public class Contact extends AbstractEntity {
 
     public void setBossOfDepartment(Department bossOfDepartment) { this.bossOfDepartment = bossOfDepartment; }
 
-    public ParkingSpace getParkingSpace() { return parkingSpace; }
+    public Team getParkingSpace() { return team; }
 
-    public void setParkingSpace(ParkingSpace parkingSpaces) { this.parkingSpace = parkingSpaces; }
+    public void setParkingSpace(Team team) { this.team = team; }
 
     public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
 

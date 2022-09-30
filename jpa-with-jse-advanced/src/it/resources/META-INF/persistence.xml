@@ -11,7 +11,7 @@
         <class>com.example.domain.Department</class>
         <class>com.example.domain.Car</class>
         <class>com.example.domain.Laptop</class>
-        <class>com.example.domain.ParkingSpace</class>
+        <class>com.example.domain.Team</class>
         <class>com.example.domain.Phone</class>
         <properties>
             <property name="jakarta.persistence.validation.mode" value="AUTO"/>

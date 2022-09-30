@@ -1,7 +1,7 @@
 package com.example.dao;
 
 import com.example.domain.Contact;
-import com.example.domain.ParkingSpace;
+import com.example.domain.Team;
 import org.slf4j.Logger;
 
 import jakarta.inject.Inject;
@@ -117,7 +117,7 @@ public class ContactDao {
         return query.getSingleResult();
     }
 
-    public List<Contact> findByParkingSpace(ParkingSpace ps) {
+    public List<Contact> findByParkingSpace(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
                                 "FROM Contact c " +
@@ -127,10 +127,10 @@ public class ContactDao {
         return query.getResultList();
     }
 
-    public List<Contact> findByParkingSpaceUsingIN(ParkingSpace ps) {
+    public List<Contact> findByParkingSpaceUsingIN(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
-                                "FROM ParkingSpace p, " +
+                                "FROM Team p, " +
                                 "   IN (p.contacts) c " + // generates a join
                                 "WHERE p.id = :p_id", Contact.class)
                 .setParameter("p_id", ps.getId());
