@@ -3,8 +3,8 @@ package com.example;
 import com.example.domain.Contact;
 import com.example.domain.ContactDaoDetachAndRollback;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 import java.util.Date;
 
 public class AppDetachment {

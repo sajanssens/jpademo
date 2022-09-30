@@ -1,6 +1,6 @@
 package org.example;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 import static org.example.Config.dropAndCreateDatabase;
 import static org.example.Config.em;

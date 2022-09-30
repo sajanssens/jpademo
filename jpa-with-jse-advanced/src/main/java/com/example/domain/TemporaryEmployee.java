@@ -1,6 +1,6 @@
 package com.example.domain;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.util.Date;
 
 @Entity

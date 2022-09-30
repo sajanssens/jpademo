@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="${project.name}">
+
+    <featureManager>
+        <feature>microProfile-5.0</feature>
+        <feature>persistence-3.0</feature>
+    </featureManager>
+
+
+    <httpEndpoint id="defaultHttpEndpoint"
+                  httpPort="9080"
+                  httpsPort="9443"/>
+
+    <webApplication location="${project.name}.war" contextRoot="${app.context.root}">
+        <classloader apiTypeVisibility="+third-party"/>
+    </webApplication>
+    <mpMetrics authentication="false"/>
+
+    <!-- This is the keystore that will be used by SSL and by JWT. -->
+    <keyStore id="defaultKeyStore" location="public.jks" type="JKS" password="atbash"/>
+
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/MySQL">
+        <jdbcDriver libraryRef="MySQLLib"/>
+        <properties serverName="localhost" portNumber="3307" databaseName="hrm"
+                    user="root" password="root"/>
+    </dataSource>
+    <library id="MySQLLib">
+        <file name="lib/global/jdbc/mysql-connector-java-8.0.30.jar"/>
+    </library>
+
+    <!-- The MP JWT configuration that injects the caller's JWT into a ResourceScoped bean for inspection. -->
+    <mpJwt id="jwtUserConsumer" keyName="theKeyId" audiences="targetService" issuer="${jwt.issuer}"/>
+
+</server>

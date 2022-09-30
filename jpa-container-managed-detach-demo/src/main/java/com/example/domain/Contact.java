@@ -16,7 +16,7 @@ public class Contact {
     private String firstname;
     private Date birthdate;
 
-    public Contact() {}
+    public Contact() { }
 
     public Contact(String firstname, Date birthdate) {
         this.firstname = firstname;

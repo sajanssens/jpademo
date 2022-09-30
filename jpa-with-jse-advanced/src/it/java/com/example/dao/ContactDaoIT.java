@@ -1,17 +1,21 @@
 package com.example.dao;
 
-import com.example.App;
 import com.example.EntityManagerProducerAlt;
 import com.example.domain.Car;
 import com.example.domain.Contact;
 import com.example.domain.Department;
 import com.example.domain.Laptop;
-import com.example.domain.ParkingSpace;
 import com.example.domain.Phone;
+import com.example.domain.Team;
+import com.example.util.LoggerProducer;
+import jakarta.inject.Inject;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.hibernate.LazyInitializationException;
 import org.jboss.weld.junit5.auto.AddBeanClasses;
-import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAlternatives;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.AfterEach;
@@ -19,11 +23,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
-import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -37,8 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableAutoWeld
-@AddPackages(App.class)
-@AddBeanClasses(EntityManagerProducerAlt.class)
+@AddBeanClasses({EntityManagerProducerAlt.class, LoggerProducer.class, ContactDao.class})
 @EnableAlternatives(EntityManagerProducerAlt.class)
 class ContactDaoIT {
 
@@ -75,19 +73,19 @@ class ContactDaoIT {
     }
 
     @Test
-    void whenContactsHaveParkingSpaceTheyCanBeFound() {
-        ParkingSpace ps = ParkingSpace.builder().number(1).build();
+    void whenContactsHaveTeamTheyCanBeFound() {
+        Team ps = Team.builder().number(1).build();
 
         Contact bram = new Contact("Bram", new Date());
         Contact mieke = new Contact("Mieke", new Date());
 
-        bram.setParkingSpace(ps);
-        mieke.setParkingSpace(ps);
+        bram.setTeam(ps);
+        mieke.setTeam(ps);
 
         dao.save(bram);
         dao.save(mieke);
 
-        List<Contact> contacts = dao.findByParkingSpace(ps);
+        List<Contact> contacts = dao.findByTeam(ps);
         assertThat(contacts.size(), is(2));
     }
 
@@ -95,13 +93,13 @@ class ContactDaoIT {
     public void saveWithDetailsDemo() {
         Contact bram = new Contact("Bram", new Date());
         Department kc = new Department("Kenniscentrum");
-        ParkingSpace ps = ParkingSpace.builder().number(1).build();
+        Team ps = Team.builder().number(1).build();
         Car c = Car.builder().brand("Skoda").build();
         Phone p = Phone.builder().number("06123456789").build();
         Laptop lap = Laptop.builder().brand("DELL").build();
 
         bram.setBossOfDepartment(kc);
-        bram.setParkingSpace(ps);
+        bram.setTeam(ps);
         bram.setLeaseCar(c);
         bram.addPhone(p);
         bram.addLaptop(lap);
@@ -116,7 +114,7 @@ class ContactDaoIT {
         assertThat(refreshedBram.getId(), is(not(0)));
         assertThat(refreshedBram.getName(), is("Bram"));
         assertThat(refreshedBram.getBossOfDepartment().getName(), is("Kenniscentrum"));
-        assertThat(refreshedBram.getParkingSpace().getId(), is(not(0)));
+        assertThat(refreshedBram.getTeam().getId(), is(not(0)));
 
         Contact boss = dao.findBoss("Kenniscentrum");
         assertThat(boss.getName(), is("Bram"));
@@ -140,14 +138,14 @@ class ContactDaoIT {
     }
 
     @Test
-    public void whenContactWithInvalidNameIsValidatedItReturnsConstraintViolation() {
-        try (ValidatorFactory vf = Validation.buildDefaultValidatorFactory()) {
-            Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
-            Set<ConstraintViolation<Contact>> validate = vf.getValidator().validate(bramTooLong);
-            validate.forEach(v -> System.out.println(v.getMessage()));
+    public void whenContactWithInvalidNameIsValidatedIsReturnsConstraintViolation() {
+        Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
 
-            assertTrue(validate.size() > 0);
-        }
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Contact>> validate = validator.validate(bramTooLong);
+        validate.forEach(v -> System.out.println(v.getMessage()));
+
+        assertTrue(validate.size() > 0);
     }
 
     @Test
@@ -259,6 +257,7 @@ class ContactDaoIT {
     }
 
     @Test
+    @Disabled
     void whenContactIsSelectedItsPhonesAreNotLoaded() {
         Contact a = new Contact("A");
         a.addPhone(new Phone("1"));

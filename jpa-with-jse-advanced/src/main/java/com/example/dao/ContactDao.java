@@ -1,16 +1,16 @@
 package com.example.dao;
 
 import com.example.domain.Contact;
-import com.example.domain.ParkingSpace;
+import com.example.domain.Team;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import java.util.List;
 
 // Dao which uses DI through CDI. Corresponding ..IT has to use Weld therefore.
@@ -117,20 +117,20 @@ public class ContactDao {
         return query.getSingleResult();
     }
 
-    public List<Contact> findByParkingSpace(ParkingSpace ps) {
+    public List<Contact> findByTeam(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
                                 "FROM Contact c " +
-                                "WHERE c.parkingSpace.id = :p_id", Contact.class) // no join needed
+                                "WHERE c.team.id = :p_id", Contact.class) // no join needed
                 .setParameter("p_id", ps.getId());
 
         return query.getResultList();
     }
 
-    public List<Contact> findByParkingSpaceUsingIN(ParkingSpace ps) {
+    public List<Contact> findByTeamUsingIN(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
-                                "FROM ParkingSpace p, " +
+                                "FROM Team p, " +
                                 "   IN (p.contacts) c " + // generates a join
                                 "WHERE p.id = :p_id", Contact.class)
                 .setParameter("p_id", ps.getId());

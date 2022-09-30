@@ -2,15 +2,15 @@ package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static javax.persistence.CascadeType.PERSIST;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.TemporalType.DATE;
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.TemporalType.DATE;
 
 @Entity
 @NamedQuery(name = "findAll", query = "select c from Contact c")
@@ -60,7 +60,7 @@ public class Contact extends AbstractEntity {
 
     // BiDi, owning side
     @ManyToOne(cascade = PERSIST)
-    private ParkingSpace parkingSpace;
+    private Team team;
 
     // UniDi
     @OneToOne(cascade = PERSIST, orphanRemoval = true)
@@ -114,9 +114,9 @@ public class Contact extends AbstractEntity {
 
     public void setBossOfDepartment(Department bossOfDepartment) { this.bossOfDepartment = bossOfDepartment; }
 
-    public ParkingSpace getParkingSpace() { return parkingSpace; }
+    public Team getTeam() { return team; }
 
-    public void setParkingSpace(ParkingSpace parkingSpaces) { this.parkingSpace = parkingSpaces; }
+    public void setTeam(Team team) { this.team = team; }
 
     public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
 

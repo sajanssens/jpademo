@@ -2,9 +2,9 @@ package com.example;
 
 import com.example.domain.Contact;
 import com.example.domain.ContactDao;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import java.util.Date;
 import java.util.List;
 

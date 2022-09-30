@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class Transaction {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/post?serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3307/forum?serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
@@ -45,7 +45,6 @@ public class Transaction {
     }
 
     public static void executeTransaction(Consumer<Connection> jdbcCode) {
-        executeTransaction(c -> {jdbcCode.accept(c); return 1;});
+        executeTransaction(c -> { jdbcCode.accept(c); return 1; });
     }
-
 }
