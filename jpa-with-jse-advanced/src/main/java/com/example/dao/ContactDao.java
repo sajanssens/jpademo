@@ -117,17 +117,17 @@ public class ContactDao {
         return query.getSingleResult();
     }
 
-    public List<Contact> findByParkingSpace(Team ps) {
+    public List<Contact> findByTeam(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
                                 "FROM Contact c " +
-                                "WHERE c.parkingSpace.id = :p_id", Contact.class) // no join needed
+                                "WHERE c.team.id = :p_id", Contact.class) // no join needed
                 .setParameter("p_id", ps.getId());
 
         return query.getResultList();
     }
 
-    public List<Contact> findByParkingSpaceUsingIN(Team ps) {
+    public List<Contact> findByTeamUsingIN(Team ps) {
         TypedQuery<Contact> query = em.createQuery(
                         "SELECT c " +
                                 "FROM Team p, " +

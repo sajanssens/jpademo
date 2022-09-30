@@ -114,9 +114,9 @@ public class Contact extends AbstractEntity {
 
     public void setBossOfDepartment(Department bossOfDepartment) { this.bossOfDepartment = bossOfDepartment; }
 
-    public Team getParkingSpace() { return team; }
+    public Team getTeam() { return team; }
 
-    public void setParkingSpace(Team team) { this.team = team; }
+    public void setTeam(Team team) { this.team = team; }
 
     public void setLeaseCar(Car leaseCar) { this.leaseCar = leaseCar; }
 

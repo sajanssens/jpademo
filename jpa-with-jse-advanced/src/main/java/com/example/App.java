@@ -12,7 +12,7 @@ public class App {
     @Inject Logger logger;
 
     private void run() {
-        logger.info("sfgfg");
+        logger.info("is logger injected correctly?");
         // see test code for tests
 
     }

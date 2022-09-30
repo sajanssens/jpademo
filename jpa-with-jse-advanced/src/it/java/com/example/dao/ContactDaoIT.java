@@ -1,13 +1,13 @@
 package com.example.dao;
 
-import com.example.App;
 import com.example.EntityManagerProducerAlt;
 import com.example.domain.Car;
 import com.example.domain.Contact;
 import com.example.domain.Department;
 import com.example.domain.Laptop;
-import com.example.domain.Team;
 import com.example.domain.Phone;
+import com.example.domain.Team;
+import com.example.util.LoggerProducer;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolation;
@@ -16,7 +16,6 @@ import jakarta.validation.Validator;
 import org.assertj.core.api.Assertions;
 import org.hibernate.LazyInitializationException;
 import org.jboss.weld.junit5.auto.AddBeanClasses;
-import org.jboss.weld.junit5.auto.AddPackages;
 import org.jboss.weld.junit5.auto.EnableAlternatives;
 import org.jboss.weld.junit5.auto.EnableAutoWeld;
 import org.junit.jupiter.api.AfterEach;
@@ -37,8 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @EnableAutoWeld
-@AddPackages(App.class)
-@AddBeanClasses(EntityManagerProducerAlt.class)
+@AddBeanClasses({EntityManagerProducerAlt.class, LoggerProducer.class, ContactDao.class})
 @EnableAlternatives(EntityManagerProducerAlt.class)
 class ContactDaoIT {
 
@@ -75,19 +73,19 @@ class ContactDaoIT {
     }
 
     @Test
-    void whenContactsHaveParkingSpaceTheyCanBeFound() {
+    void whenContactsHaveTeamTheyCanBeFound() {
         Team ps = Team.builder().number(1).build();
 
         Contact bram = new Contact("Bram", new Date());
         Contact mieke = new Contact("Mieke", new Date());
 
-        bram.setParkingSpace(ps);
-        mieke.setParkingSpace(ps);
+        bram.setTeam(ps);
+        mieke.setTeam(ps);
 
         dao.save(bram);
         dao.save(mieke);
 
-        List<Contact> contacts = dao.findByParkingSpace(ps);
+        List<Contact> contacts = dao.findByTeam(ps);
         assertThat(contacts.size(), is(2));
     }
 
@@ -101,7 +99,7 @@ class ContactDaoIT {
         Laptop lap = Laptop.builder().brand("DELL").build();
 
         bram.setBossOfDepartment(kc);
-        bram.setParkingSpace(ps);
+        bram.setTeam(ps);
         bram.setLeaseCar(c);
         bram.addPhone(p);
         bram.addLaptop(lap);
@@ -116,7 +114,7 @@ class ContactDaoIT {
         assertThat(refreshedBram.getId(), is(not(0)));
         assertThat(refreshedBram.getName(), is("Bram"));
         assertThat(refreshedBram.getBossOfDepartment().getName(), is("Kenniscentrum"));
-        assertThat(refreshedBram.getParkingSpace().getId(), is(not(0)));
+        assertThat(refreshedBram.getTeam().getId(), is(not(0)));
 
         Contact boss = dao.findBoss("Kenniscentrum");
         assertThat(boss.getName(), is("Bram"));
