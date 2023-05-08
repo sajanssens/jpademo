@@ -28,7 +28,7 @@ public class Config {
     public static void dropAndCreateDatabase() {
         executeTransaction(c -> {
             try {
-                Statement s = c.createStatement(); s.execute("DROP DATABASE IF EXISTS POST"); s.execute("CREATE DATABASE IF NOT EXISTS POST");
+                Statement s = c.createStatement(); s.execute("DROP DATABASE IF EXISTS forum"); s.execute("CREATE DATABASE IF NOT EXISTS forum");
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -17,43 +17,43 @@ public class App {
     private static final EntityManager em = Persistence.createEntityManagerFactory("ContactServiceMySQL").createEntityManager();
 
     private static void test() {
-        ContactDao service = new ContactDao(em);
+        ContactDao dao = new ContactDao(em);
 
         System.out.println("save...");
         Contact bram = new Contact("Bram", new Date());
-        service.save(bram);
+        dao.save(bram);
 
         System.out.println("find...");
-        Contact contact1 = service.find(1);
+        Contact contact1 = dao.find(1);
         System.out.println("contact1=" + contact1);
-        Contact contact2 = service.find(2);
+        Contact contact2 = dao.find(2);
         System.out.println("contact2=" + contact2);
 
         System.out.println("findAll...");
-        List<Contact> all = service.findAll();
+        List<Contact> all = dao.findAll();
         for (Contact contact : all) {
             System.out.println(contact);
         }
 
         System.out.println("updating by id...");
         System.out.println("before update: " + bram);
-        Contact arie = service.updateFirstname(contact1.getId(), "arie");
+        Contact arie = dao.updateFirstname(contact1.getId(), "arie");
         System.out.println("after update: " + arie);
 
         System.out.println("updating full object...");
         System.out.println("before update: " + arie);
         arie.setFirstname("harry");
 
-        // service.save(arie);
-        // Contact harry = service.find(1);
+        // dao.save(arie);
+        // Contact harry = dao.find(1);
         //   or:
-        Contact harry = service.update(arie);
+        Contact harry = dao.update(arie);
 
         System.out.println("after update: " + harry);
 
         System.out.println("removing...");
-        service.remove(1);
-        bram = service.find(1);
+        dao.remove(1);
+        bram = dao.find(1);
         System.out.println(bram);
     }
 

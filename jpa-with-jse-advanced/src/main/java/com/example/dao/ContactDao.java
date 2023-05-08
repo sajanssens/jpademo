@@ -2,8 +2,6 @@ package com.example.dao;
 
 import com.example.domain.Contact;
 import com.example.domain.Team;
-import org.slf4j.Logger;
-
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -11,10 +9,12 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.slf4j.Logger;
+
 import java.util.List;
 
 // Dao which uses DI through CDI. Corresponding ..IT has to use Weld therefore.
-public class ContactDao {
+public class ContactDao extends Dao<Contact, Long> {
 
     @Inject
     private Logger log;
@@ -22,21 +22,9 @@ public class ContactDao {
     @Inject
     private EntityManager em;
 
-    public ContactDao() {}
+    public ContactDao() { }
 
     // Basic CRUD -----------
-
-    public void save(Contact p) {
-        try {
-            em.getTransaction().begin();
-            em.persist(p); // in persistence context
-            em.getTransaction().commit();
-            em.detach(p);
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw e;
-        }
-    }
 
     public void saveWithoutCatchAndRollback(Contact c) {
         em.getTransaction().begin();
@@ -217,5 +205,4 @@ public class ContactDao {
 
         return em.createQuery(q).getResultList();
     }
-
 }

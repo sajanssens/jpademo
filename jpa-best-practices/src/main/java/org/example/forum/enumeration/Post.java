@@ -1,8 +1,20 @@
 package org.example.forum.enumeration;
 
-import lombok.*;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Singular;
 
-import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,15 +33,16 @@ public class Post {
     private Tag rootTag;
 
     // collection valued enum
-    @ElementCollection
-    // @Convert(converter = TagConverter.class) // AND use a converter TOGETHER WITH @ElementCollection
-    @Singular
+    @ElementCollection @Singular
+    // Optionally, add:
+    // @CollectionTable(name = "PostTag")       // choose the table name yourself
+    // @Convert(converter = TagConverter.class) // use a converter TOGETHER WITH @ElementCollection
     private Set<Tag> tags;
 
     // onetomany to an entity (instead of enum) with hard coded database values
-    @OneToMany
-    @Singular
+    @OneToMany @Singular
+    // Optionally, add:
+    // @JoinTable(name = "PostCategory")
     private Set<Category> categories = new HashSet<>();
-
 }
 
