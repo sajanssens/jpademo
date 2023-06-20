@@ -23,7 +23,7 @@ import static javax.persistence.TemporalType.DATE;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class Contact { // doesn't extend abstractentity so we can choose a different id generation strategy here (as an example)
+public class Contact { // doesn't extend abstract entity so we can choose a different id generation strategy here (as an example)
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private long id;

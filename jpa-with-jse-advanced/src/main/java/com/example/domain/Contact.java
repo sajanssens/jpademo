@@ -13,7 +13,7 @@ import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.TemporalType.DATE;
 
 @Entity
-@NamedQuery(name = "findAll", query = "select c from Contact c")
+@NamedQuery(name = "Contact.findAll", query = "select c from Contact c")
 public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field

@@ -11,6 +11,7 @@ import com.example.util.LoggerProducer;
 import jakarta.inject.Inject;
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.assertj.core.api.Assertions;
@@ -49,9 +50,7 @@ class ContactDaoIT {
     @AfterEach
     public void teardown() {
         // If some tests have open transactions because of exceptions (like in testSaveDetachedEntityWithoutCatchAndRollback)
-        if (em.getTransaction().isActive()) {
-            em.getTransaction().rollback();
-        }
+        dao.rollbackActiveTransaction();
     }
 
     @Test
@@ -134,7 +133,8 @@ class ContactDaoIT {
     @Test
     public void whenContactWithInvalidNameIsInsertedItIsRefused() {
         Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
-        assertThrows(RuntimeException.class, () -> dao.save(bramTooLong));
+        ConstraintViolationException e = assertThrows(ConstraintViolationException.class, () -> dao.save(bramTooLong));
+        System.out.println(e);
     }
 
     @Test
@@ -152,7 +152,7 @@ class ContactDaoIT {
     public void whenContactWithInvalidEmailIsInsertedItIsRefused() {
         Contact bramInvalidEmail = new Contact("Bram", new Date());
         bramInvalidEmail.setEmailAddress("bram_at_test.com");
-        assertThrows(RuntimeException.class, () -> dao.save(bramInvalidEmail));
+        assertThrows(ConstraintViolationException.class, () -> dao.save(bramInvalidEmail));
     }
 
     @Test

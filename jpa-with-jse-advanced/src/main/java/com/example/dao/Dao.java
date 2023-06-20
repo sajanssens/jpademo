@@ -44,6 +44,12 @@ public abstract class Dao<E extends Identifiable<I>, I> {// E is an entity, I is
         em.getTransaction().commit();
     }
 
+    public void rollbackActiveTransaction(){
+        if (em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
+    }
+
     /**
      * @return a class instance of the first generic type parameter (E) of this Dao,
      * e.g. for PersonDao<Person>, it returns Employee.class.
