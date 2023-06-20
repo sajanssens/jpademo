@@ -7,6 +7,7 @@ import static org.example.Config.*;
 public class App extends AppInit {
 
     // Same as onetomany.bidi
+    // Cascade delete from post to comments is managed by cascadetype in post
     private void start() {
         Post post = Post.builder().title("first").build();
 

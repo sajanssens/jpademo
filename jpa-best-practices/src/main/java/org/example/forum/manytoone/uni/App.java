@@ -12,6 +12,7 @@ import static org.example.Config.persist;
 public class App extends AppInit {
 
     // Preferred way.
+    // Cascade delete from post to comments is managed by foreign key constraint in postcomment
 
     public void start() {
         Post post = Post.builder().title("first").build();
