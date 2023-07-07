@@ -12,7 +12,7 @@
     <artifactId>jpa-with-jse-basic</artifactId>
 
     <properties>
-        <h2.version>2.1.212</h2.version>
+        <h2.version>2.2.220</h2.version>
         <skipUnitTests>false</skipUnitTests>
         <skipIntegrationTests>false</skipIntegrationTests>
     </properties>
