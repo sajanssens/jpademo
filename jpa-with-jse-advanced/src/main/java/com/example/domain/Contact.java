@@ -4,6 +4,7 @@ import com.example.util.BooleanTFConverter;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,7 +23,8 @@ public class Contact extends AbstractEntity {
     private String name;
 
     @Column(unique = true)
-    @Email // @Pattern(regexp = EMAIL) // Bean validation API
+    // @Email
+    @Pattern(regexp = "....") // Bean validation API
     private String emailAddress;
 
     // Special fields -----------------------------------------------

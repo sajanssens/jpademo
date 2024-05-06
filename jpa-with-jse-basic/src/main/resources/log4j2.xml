@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
     <Properties>
-        <property name="logpattern">%highlight{[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n}{FATAL=red
-            blink, ERROR=red, WARN=yellow bold, INFO=WHITE, DEBUG=green bold, TRACE=blue}
+        <Property name="pattern_level_colors">
+            FATAL=bold magenta, ERROR=red, WARN=yellow bold, INFO=WHITE, DEBUG=green bold, TRACE=blue
+        </Property>
+        <property name="logpattern">
+            %highlight{[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n}{${pattern_level_colors}}
         </property>
     </Properties>
 
@@ -24,15 +27,13 @@
     </Appenders>
 
     <Loggers>
-        <!--<Logger name="com.example" level="ALL" additivity="true">
-            <AppenderRef ref="rollingFile"/>
-        </Logger>-->
+        <Logger name="org.hibernate.SQL" level="DEBUG"/>
+        <!--<Logger name="org.hibernate.SQL_SLOW" level="DEBUG"/>-->
 
-        <Logger name="org.hibernate" level="DEBUG"/>
         <!--to show binding parameter log statements:-->
-        <Logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+        <Logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
 
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="console"/>
         </Root>
     </Loggers>

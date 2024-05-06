@@ -4,13 +4,15 @@ import com.example.domain.Contact;
 import com.example.domain.ContactDao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.List;
 
 // To start mysql, see README in parent.
-// Next create the database 'jpa-with-jse' on mysql to run this example.
+// Next, create the database 'jpa-with-jse' on mysql, then run this example.
 
+@Slf4j
 public class App {
 
     // App creates EntityManager
@@ -19,29 +21,29 @@ public class App {
     private static void test() {
         ContactDao dao = new ContactDao(em);
 
-        System.out.println("save...");
+        log.debug("save...");
         Contact bram = new Contact("Bram", new Date());
         dao.save(bram);
 
-        System.out.println("find...");
+        log.debug("find...");
         Contact contact1 = dao.find(1);
-        System.out.println("contact1=" + contact1);
+        log.debug("contact1=" + contact1);
         Contact contact2 = dao.find(2);
-        System.out.println("contact2=" + contact2);
+        log.debug("contact2=" + contact2);
 
-        System.out.println("findAll...");
+        log.debug("findAll...");
         List<Contact> all = dao.findAll();
         for (Contact contact : all) {
-            System.out.println(contact);
+            log.debug(contact + "");
         }
 
-        System.out.println("updating by id...");
-        System.out.println("before update: " + bram);
+        log.debug("updating by id...");
+        log.debug("before update: " + bram);
         Contact arie = dao.updateFirstname(contact1.getId(), "arie");
-        System.out.println("after update: " + arie);
+        log.debug("after update: " + arie);
 
-        System.out.println("updating full object...");
-        System.out.println("before update: " + arie);
+        log.debug("updating full object...");
+        log.debug("before update: " + arie);
         arie.setFirstname("harry");
 
         // dao.save(arie);
@@ -49,12 +51,12 @@ public class App {
         //   or:
         Contact harry = dao.update(arie);
 
-        System.out.println("after update: " + harry);
+        log.debug("after update: " + harry);
 
-        System.out.println("removing...");
+        log.debug("removing...");
         dao.remove(1);
         bram = dao.find(1);
-        System.out.println(bram);
+        log.debug(bram + "");
     }
 
     public static void main(String[] args) { test(); }

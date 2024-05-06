@@ -176,7 +176,7 @@ public class ContactDao extends Dao<Contact, Long> {
     }
 
     public List<Contact> findTempEmployees() {
-        TypedQuery<Contact> query = em.createQuery("select p from Contact p where type(p) = TemporaryEmployee", Contact.class);
+        TypedQuery<Contact> query = em.createQuery("select c from Contact c where type(c) = TemporaryEmployee", Contact.class);
         return query.getResultList(); // 2
     }
 

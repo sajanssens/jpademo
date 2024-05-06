@@ -2,7 +2,6 @@ package org.example.forum.onetomany.uni;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.AppInit;
-import org.hibernate.LazyInitializationException;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class App extends AppInit {
             Post detachedPost = find(em, managedPost.getId(), Post.class);
             em.detach(detachedPost);
             detachedPost.getComments().forEach(e -> log.info(e.toString()));
-        } catch (LazyInitializationException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 

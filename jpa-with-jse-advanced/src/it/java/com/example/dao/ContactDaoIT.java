@@ -138,7 +138,7 @@ class ContactDaoIT {
     }
 
     @Test
-    public void whenContactWithInvalidNameIsValidatedIsReturnsConstraintViolation() {
+    public void whenContactWithInvalidNameIsValidatedItReturnsConstraintViolation() {
         Contact bramTooLong = new Contact("Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram Bram bram bram ", new Date());
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

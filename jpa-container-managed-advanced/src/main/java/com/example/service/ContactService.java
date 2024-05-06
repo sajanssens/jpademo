@@ -144,7 +144,7 @@ public class ContactService {
     // Native query ---------
 
     public List<Contact> findByNameNative(String name) {
-        Query query = em.createNativeQuery("SELECT * FROM contactperson WHERE C_NAME LIKE ?", Contact.class);
+        Query query = em.createNativeQuery("SELECT * FROM contactperson W   HERE C_NAME L   IKE ?", Contact.class);
         query.setParameter(1, name + "%");
         return query.getResultList();
     }
