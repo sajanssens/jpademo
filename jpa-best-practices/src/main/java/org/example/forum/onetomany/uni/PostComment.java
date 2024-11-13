@@ -1,5 +1,6 @@
 package org.example.forum.onetomany.uni;
 
+import jakarta.persistence.NamedQuery;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 
 @Entity
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
+@NamedQuery(name = "PostComment.findComments", query = "SELECT comments FROM Post p JOIN p.comments comments  WHERE p.id=:id")
 public class PostComment {
 
     @Id @GeneratedValue

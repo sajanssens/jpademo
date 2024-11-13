@@ -1,4 +1,4 @@
-These short demo's describe best practises to map entities with JPA, considering performance and data model consistency.
+These short demo's describe best practices to map entities with JPA, considering performance and data model consistency.
 
 #### Points to consider
 

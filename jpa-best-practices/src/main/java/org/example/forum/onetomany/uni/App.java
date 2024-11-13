@@ -8,6 +8,7 @@ import java.util.List;
 import static org.example.Config.find;
 import static org.example.Config.findAllDistinctWithDetailsFetched;
 import static org.example.Config.findAllWithDetailsFetched;
+import static org.example.Config.findComments;
 import static org.example.Config.findWithDetailsFetched;
 import static org.example.Config.oneToManyUni;
 import static org.example.Config.persist;
@@ -41,33 +42,40 @@ public class App extends AppInit {
         findWithComments(post);
     }
 
-    private void findWithComments(Post managedPost) {
+    private void findWithComments(Post post) {
         // Get all postcomments is easy in this solution, since collection is already available,
         // but this only works when post is managed, since comments are lazily loaded:
-        Post find = find(em, managedPost.getId(), Post.class); // results in SELECT from post
-        find.getComments().forEach(e -> log.info(e.toString()));//        results in SELECT from comment
-        // So this results in TWO SELECTs :-(
+        Post managedPost = find(em, post.getId(), Post.class); // results in SELECT from post and SELECT from Post_PostComment
+        // This resulted in TWO select queries :-(
+        managedPost.getComments().forEach(e -> log.info(e.toString()));//        results in SELECT from comment
 
         // When post is detached, like in Spring/JEE, then an exception occurs:
         try {
-            Post detachedPost = find(em, managedPost.getId(), Post.class);
-            em.detach(detachedPost);
-            detachedPost.getComments().forEach(e -> log.info(e.toString()));
+            Post p = find(em, post.getId(), Post.class);
+            em.detach(p);
+            p.getComments().forEach(e -> log.info(e.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         // We can fetch the comments of a detached post with a JPQL query instead:
-        em.detach(managedPost);
-        Post findWithDetails = findWithDetailsFetched(em, managedPost.getId(), Post.class);
+        em.detach(post);
+        Post findWithDetails = findWithDetailsFetched(em, post.getId(), Post.class);
         // And this results in one SELECT (with JOINs) only!
         findWithDetails.getComments().forEach(e -> log.info(e.toString()));
+
+        List<PostComment> comments = findComments(em, post.getId(), PostComment.class);
+        // This also results in one SELECT (with JOINs) only.
+        comments.forEach(e -> log.info(e.toString()));
 
         // -------------------------------------------------------------
         // But what happens when we find all posts with details fetched?
         List<Post> allWithDetailsFetched = findAllWithDetailsFetched(em, Post.class);
         allWithDetailsFetched.forEach(e -> log.info(e.toString()));
-        // Although there is only one post, we get three,.. what?!
+        // Although there is only one post, we get three... what?!
+        // NOTE: This depends on the persistence provider:
+        //       The behavior of JOIN FETCH in JPA has been updated, particularly in Hibernate.
+        //       Hibernate introduced the hibernate.query.passDistinctThrough hint.
 
         // This is caused by the join on comment. We have to filter out duplicates:
         List<Post> allDistinctWithDetailsFetched = findAllDistinctWithDetailsFetched(em, Post.class);

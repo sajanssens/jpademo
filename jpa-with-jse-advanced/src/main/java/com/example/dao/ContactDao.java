@@ -19,8 +19,8 @@ public class ContactDao extends Dao<Contact, Long> {
     @Inject
     private Logger log;
 
-    @Inject
-    private EntityManager em;
+    // @Inject
+    // private EntityManager em;
 
     public ContactDao() { }
 

@@ -1,13 +1,29 @@
 package com.example.domain;
 
 import com.example.util.BooleanTFConverter;
-
-import jakarta.persistence.*;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
@@ -15,6 +31,7 @@ import static jakarta.persistence.TemporalType.DATE;
 
 @Entity
 @NamedQuery(name = "Contact.findAll", query = "select c from Contact c")
+// @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // this is the default
 public class Contact extends AbstractEntity {
 
     // @Basic is present implicitly on each field
@@ -23,8 +40,9 @@ public class Contact extends AbstractEntity {
     private String name;
 
     @Column(unique = true)
-    // @Email
-    @Pattern(regexp = "....") // Bean validation API
+    // Bean validation API:
+    @Email
+    // Alternatively, use: @Pattern(regexp = "....")
     private String emailAddress;
 
     // Special fields -----------------------------------------------

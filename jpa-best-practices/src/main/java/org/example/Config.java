@@ -56,6 +56,12 @@ public class Config {
         TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findWithDetailsFetched", c); query.setParameter("id", id); return query.getSingleResult();
     }
 
+    public static <T> List<T> findComments(EntityManager em, long id, Class<T> c) {
+        return em.createNamedQuery(c.getSimpleName() + ".findComments", c)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     public static <T> List<T> findAllWithDetailsFetched(EntityManager em, Class<T> c) {
         TypedQuery<T> query = em.createNamedQuery(c.getSimpleName() + ".findAllWithDetailsFetched", c); return query.getResultList();
     }
